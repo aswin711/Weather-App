@@ -1,11 +1,18 @@
 import {
-    FETCH_CITY
+    FETCH_CITY, FETCH_FORECAST
 } from '../actions/types';
 
-export default function(state =[], action){
+initialState = {
+    weather: {},
+    forecast: {}
+}
+
+export default function(state = initialState , action){
     switch(action.type) {
         case FETCH_CITY:
-            return action.payload;
+            return { ...state, weather: action.payload };
+        case FETCH_FORECAST:
+            return { ...state, forecast: action.payload };
         default:
             return state;
     }
