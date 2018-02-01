@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Dimensions } from 'react-native';
-import { Button } from 'react-native-elements';
+import City from './City';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class Slides extends Component {
+
     constructor(props){
         super();
     }
@@ -12,11 +13,8 @@ class Slides extends Component {
     renderSlides(){
         return this.props.data.map((slide, index) => {
             return (
-                <View
-                    key={slide.text}
-                    style={[styles.slideStyle, {backgroundColor: slide.color}]}
-                >
-                    <Text style={styles.slideText}>{slide.text}</Text>
+                <View key={slide.cityId}>
+                <City cityId={slide.cityId} index={index} />
                 </View>
             )     
             });

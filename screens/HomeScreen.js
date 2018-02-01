@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { getWeatherByCityId, getForecastByCityId} from '../actions';
+import * as actions from '../actions';
 import City from '../components/City';
 import Forecast from '../components/Forecast';
 import BottomTab from '../components/BottomTab';
+import Slides from '../components/Slides';
+
+const cities = [
+    { cityId: '1273874' },
+    { cityId: '1283710' },
+    { cityId: '1269750' },
+    { cityId: '1271231' }
+];
 
 class HomeScreen extends Component {
     constructor(props){
@@ -14,26 +22,47 @@ class HomeScreen extends Component {
         };
     }
     componentDidMount(){
-        //this.fetchData();
+        this.fetchData();
     }
 
-    fetchData(){
-        this.props.getWeatherByCityId('1273874');
-        this.props.getForecastByCityId('1273874');
+     fetchData(){
+          cities.map(city => {
+            this.props.getWeatherByCityId(city.cityId);
+            this.props.getForecastByCityId(city.cityId);
+        });    
     }
 
-    onRefresh(){
-        this.setState({ refreshing: true });
-        this.onRefresh().then(() => {
-            this.setState({ refreshing: false });
-        });
+   
+    renderCity = (item) => {
+        if (item.item.id > 0 ){
+            return(
+                <City 
+                    data={item.item}
+                />
+            );
+        }
+       /* */
+        console.log(item.item);
+        return <View/>;
+    }
+    renderSlides(){
+        if(this.props.data) {
+            return (
+                <FlatList
+                    pagingEnabled
+                    data={this.props.data}
+                    horizontal
+                    keyExtractor={item => item.id}
+                    renderItem={item => this.renderCity(item)}
+                />
+            );
+        }
+       
     }
     render() {
             return(
                 <View style={styles.container}>
-                    <City 
-                        cityId='1273874'
-                    />
+                    {this.renderSlides()}
                     <BottomTab />
                 </View>
             );
@@ -45,6 +74,8 @@ const styles = {
         flex: 1
     },
 }
+function mapStateToProps(state){
+    return { data: state.home };
+}
 
-
-export default HomeScreen;
+export default connect(mapStateToProps,actions)(HomeScreen);

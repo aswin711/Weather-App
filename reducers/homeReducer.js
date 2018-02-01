@@ -2,17 +2,37 @@ import {
     FETCH_CITY, FETCH_FORECAST
 } from '../actions/types';
 
-initialState = {
-    weather: {},
-    forecast: {}
-}
+initialState = [ {
+            id: 0,
+            weather: {},
+            forecast: {}
+    }
+]
 
 export default function(state = initialState , action){
     switch(action.type) {
         case FETCH_CITY:
-            return { ...state, weather: action.payload };
+            let f = 0;
+            state.map((city,index) => {
+                if(city.id === action.payload.id){
+                   
+                    state[index] = { id: city.id , weather: action.payload.weather, forecast: city.forecast };
+                    f = 1;
+                   
+                }
+            })
+            if ( f === 0) { state.push(action.payload); }
+            return state;
         case FETCH_FORECAST:
-            return { ...state, forecast: action.payload };
+        let g = 0;
+        state.map((city,index) => {
+            if(city.id === action.payload.id){
+                state[index] = { id: city.id , forecast: action.payload.forecast, weather: city.weather };
+                g = 1;
+            }
+        });
+        if ( g === 0) { state.push(action.payload); }
+        return state;
         default:
             return state;
     }

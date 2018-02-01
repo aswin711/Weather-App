@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, View, RefreshControl } from 'react-native';
+import { ScrollView, Text, View, RefreshControl, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import * as actions from '../actions';
 import Details from './Details';
 import Forecast from './Forecast';
 import Graph from './Graph';
 import Label from './Label';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class City extends Component {
 
@@ -16,25 +19,28 @@ class City extends Component {
         };
     }
 
-    componentWillMount(){
-        this.fetchData();
+    componentDidMount(){
+        //this.fetchData();
+    }
+    
+
+    fetchCity(){
+        this.props.getWeatherByCityId(this.props.data.id);
+        this.props.getForecastByCityId(this.props.data.id);
     }
 
-    fetchData(){
-        this.props.getWeatherByCityId(this.props.cityId);
-        this.props.getForecastByCityId(this.props.cityId);
-    }
-
-    onRefresh(){
+    onRefresh() {
         this.setState({ refreshing: true });
-        this.onRefresh().then(() => {
+        this.fetchCity().then(() => {
             this.setState({ refreshing: false });
         });
     }
 
     render() {
-        if( Object.keys(this.props.weather).length !== 0){
-            const { name, main, weather, wind, visibility } = this.props.weather;
+        
+           
+        console.log(this.props.data);
+        const { name, main, weather, wind, visibility } = this.props.data.weather;
         return(
            
             <ScrollView style={styles.container} 
@@ -60,22 +66,16 @@ class City extends Component {
             </ScrollView>
             
         );
-    } else {
-        return <View/>;
-    }
-    }
+    } 
 }
 
 const styles = {
     container: {
         flex: 1,
-        paddingBottom: 75,
+        width: SCREEN_WIDTH,
         marginBottom: 20
     },
 }
 
-function mapStateToProps(state){
-    return { weather: state.home.weather, forecast: state.home.forecast };
-}
 
-export default connect(mapStateToProps,actions)(City);
+export default connect(null,actions)(City);
