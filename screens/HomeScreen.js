@@ -14,7 +14,7 @@ class HomeScreen extends Component {
         };
     }
     componentDidMount(){
-        this.fetchData();
+        //this.fetchData();
     }
 
     fetchData(){
@@ -29,32 +29,15 @@ class HomeScreen extends Component {
         });
     }
     render() {
-        console.log(this.props.weather, this.props.forecast);
-        if( Object.keys(this.props.weather).length !== 0){
             return(
                 <View style={styles.container}>
-                <ScrollView 
-            
-                    refreshControl={
-                            <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.onRefresh.bind(this)}
-                            />
-                    }
-                  
-                >
                     <City 
-                        data={this.props.weather}
+                        cityId='1273874'
                     />
-                </ScrollView>
-                <BottomTab />
+                    <BottomTab />
                 </View>
             );
-        } else {
-            return <View/>;
         }
-        
-    }
 }
 
 const styles = {
@@ -63,8 +46,5 @@ const styles = {
     },
 }
 
-function mapStateToProps(state){
-    return { weather: state.home.weather, forecast: state.home.forecast };
-}
 
-export default connect(mapStateToProps,{ getWeatherByCityId, getForecastByCityId} )(HomeScreen);
+export default HomeScreen;
