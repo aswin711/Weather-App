@@ -21,6 +21,10 @@ class HomeScreen extends Component {
             refreshing: false
         };
     }
+
+    static navigationOptions = {
+        header: null
+    };
     componentDidMount(){
         this.fetchData();
     }
@@ -32,21 +36,28 @@ class HomeScreen extends Component {
         });    
     }
 
+    openCitiesScreen = () => {
+        this.props.navigation.navigate('cities');
+    }
    
     renderCity = (item) => {
         if (item.item.id > 0 ){
+            console.log(item.item);
             return(
                 <City 
                     data={item.item}
+                   
                 />
             );
+        } else {
+            console.log(item.item);
+            return <View/>;
         }
-       /* */
-        console.log(item.item);
-        return <View/>;
+        
     }
     renderSlides(){
         if(this.props.data) {
+            console.log(this.props.data);
             return (
                 <FlatList
                     pagingEnabled
@@ -63,7 +74,9 @@ class HomeScreen extends Component {
             return(
                 <View style={styles.container}>
                     {this.renderSlides()}
-                    <BottomTab />
+                    <BottomTab 
+                         add={ () => this.openCitiesScreen()}
+                    />
                 </View>
             );
         }
