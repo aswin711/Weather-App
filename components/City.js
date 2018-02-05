@@ -31,9 +31,11 @@ class City extends Component {
 
     onRefresh() {
         this.setState({ refreshing: true });
-        this.fetchCity().then(() => {
+        /*fetchCity().then(() => {
             this.setState({ refreshing: false });
-        });
+        });*/
+        this.fetchCity();
+        this.setState({ refreshing: false });
     }
 
     render() {

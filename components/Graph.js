@@ -1,28 +1,41 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import React, {Component} from 'react'
+import { LineChart, YAxis } from 'react-native-svg-charts'
+import * as shape from 'd3-shape'
+import { View } from 'react-native'
 
-class Graph  extends Component {
+class Graph extends Component {
+
     render() {
-        return(
-            <View style={styles.container}>
-                <Text style={styles.detailsTextStyle}>Graph</Text>
-            </View>
-        );
-    }
-}
 
-const styles = {
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: 'white',
-        padding: 5,
-        marginTop: 10,
-    },
-    detailsTextStyle: {
-        fontSize: 12,
-        color: '#444444',
-    },
+        const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
+
+        const contentInset = { top: 20, bottom: 20 }
+
+        return (
+            <View style={ { height: 200, flexDirection: 'row' } }>
+                <YAxis
+                    dataPoints={ data }
+                    contentInset={ contentInset }
+                    labelStyle={ { color: 'grey' } }
+                    formatLabel={ value => `${value}ºC` }
+                />
+                <LineChart
+                    style={ { flex: 1, marginLeft: 16 } }
+                    dataPoints={ data }
+                    svg={{
+                        stroke: 'rgb(134, 65, 244)',
+                    }}
+                    shadowSvg={ {
+                        stroke: 'rgba(134, 65, 244, 0.2)',
+                        strokeWidth: 5,
+                    }}
+                    contentInset={ contentInset }
+                    curve={ shape.curveLinear }
+                />
+            </View>
+        )
+    }
+
 }
 
 export default Graph;
