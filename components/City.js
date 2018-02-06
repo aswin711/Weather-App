@@ -31,16 +31,29 @@ class City extends Component {
 
     onRefresh() {
         this.setState({ refreshing: true });
-        this.fetchCity().then(() => {
-            this.setState({ refreshing: false });
+        this.fetchCity();
+        this.setState({ refreshing: false });
+    }
+
+    get24HourForecast(){
+        const { list } = this.props.data.forecast;
+        const currentTime = Date.now() / 1000 ;
+        const day = 24 * 3600 ;
+        _.map(list, single => {
+            const { dt, dt_txt, main, weather} = single;
+            console.log(dt_txt,main.temp);
         });
+
     }
 
     render() {
         
            
-        console.log(this.props.data);
+        //console.log(this.props.data);
+        //console.log(new Date().getMinutes() );
+        //this.get24HourForecast();
         const { name, main, weather, wind, visibility } = this.props.data.weather;
+        const { list } = this.props.data.forecast;
         return(
            
             <ScrollView style={styles.container} 
@@ -55,8 +68,14 @@ class City extends Component {
                     temp={ main.temp }
                     status={ weather[0].main }
                 />
-                <Forecast />
-                <Graph />
+                <Forecast 
+                    data={this.props.data.forecast}
+                    forecast={this.props.forecast}
+                    navigation={this.props.navigation}
+                />
+                <Graph 
+                    data={list.slice(0,6)}
+                />
                 <Details 
                     wind={ wind }
                     pressure={ main.pressure }
@@ -73,7 +92,6 @@ const styles = {
     container: {
         flex: 1,
         width: SCREEN_WIDTH,
-        marginBottom: 20
     },
 }
 

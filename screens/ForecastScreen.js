@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-class Forecast extends Component {
+class ForecastScreen extends Component {
 
-
-    openForeCastScreen = () => {
-        this.props.navigation.navigate('forecast',{forecast: this.props.data.list});
-    }
+    static navigationOptions = {
+        header: null
+    };
 
     renderBlock = (list,start,end,index) => {
         let condition = [];
@@ -48,6 +47,14 @@ class Forecast extends Component {
       return this.renderBlock(list,13,21,2);
     }
 
+    renderFourthDay = (list) => {
+        return this.renderBlock(list,21,29,3);
+    }
+
+    renderFifthDay = (list) => {
+        return this.renderBlock(list,29,37,4);
+    }
+
     renderDay = (index) => {
         if (index == 0){
             return(
@@ -60,7 +67,7 @@ class Forecast extends Component {
         } else {
             const date = new Date();
             const day = date.getDay();
-            return this.renderDate(day+2);
+            return this.renderDate(day+index);
         }
     }
 
@@ -98,28 +105,38 @@ class Forecast extends Component {
     }
 
     render() {
-        const { list } = this.props.data;
+        const { params } = this.props.navigation.state;
+        const { forecast } = params;
+        console.log(params);
         return(
             <View style={styles.container}>
-                {this.renderToday(list)}
+                <View style={styles.titleStyle}>
+                <Text style={styles.titleTextStyle}>5 Days Forecast</Text>
+                <Text>2/6 - 2/10</Text>
+                </View>
+                <View style={styles.content}>
+                {this.renderToday(forecast)}
                
                <View style={styles.lineStyle} />
 
-               {this.renderTommorrow(list)}
+               {this.renderTommorrow(forecast)}
                <View style={styles.lineStyle} />
 
-               {this.renderDayAfterTmrw(list)}
+               {this.renderDayAfterTmrw(forecast)}
                <View style={styles.lineStyle} />
-
-               <TouchableOpacity
-                    onPress={() => this.openForeCastScreen()} 
-               >
-                <View  style={styles.labelStyle}>
-                <Text style={styles.labelTextStyle}>5 Days Forecast</Text>
-                </View>
-                   
-               </TouchableOpacity>
-
+               {this.renderFourthDay(forecast)}
+               <View style={styles.lineStyle} />
+            
+               {this.renderFifthDay(forecast)}
+               <View style={styles.lineStyle} />
+            </View>
+            <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}
+                >
+                    <Text>Close</Text>
+                </TouchableOpacity>
+            </View>
             </View>
         );
     }
@@ -127,11 +144,25 @@ class Forecast extends Component {
 
 const styles = {
     container: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+    titleStyle: {
+        alignItems: 'center',
+        marginTop: 20,
+        flexDirection: 'column'
+    },
+    titleTextStyle: {
+        fontSize: 25,
+        color: '#222222',
+    },
+    content: {
         flexDirection: 'column',
         backgroundColor: 'white',
         padding: 5,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: 30
     },
     detailsTextStyle: {
         fontSize: 12,
@@ -164,4 +195,4 @@ const styles = {
     }
 }
 
-export default Forecast;
+export default ForecastScreen;

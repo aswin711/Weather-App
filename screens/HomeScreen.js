@@ -39,25 +39,30 @@ class HomeScreen extends Component {
     openCitiesScreen = () => {
         this.props.navigation.navigate('cities');
     }
+
+    openForeCastScreen = () => {
+        this.props.navigation.navigate('forecast',{forecast: this.props.data.forecast });
+    }
    
     renderCity = (item) => {
         if (item.item.id > 0 ){
-            console.log(item.item);
+            //console.log(item.item);
             return(
                 <City 
                     data={item.item}
-                   
+                    forecast={() => this.openForeCastScreen()}
+                    navigation={this.props.navigation}
                 />
             );
         } else {
-            console.log(item.item);
+            //console.log(item.item);
             return <View/>;
         }
         
     }
     renderSlides(){
-        if(this.props.data) {
-            console.log(this.props.data);
+       
+            //console.log(this.props.data);
             return (
                 <FlatList
                     pagingEnabled
@@ -67,7 +72,7 @@ class HomeScreen extends Component {
                     renderItem={item => this.renderCity(item)}
                 />
             );
-        }
+       
        
     }
     render() {

@@ -17,6 +17,7 @@ import { StackNavigator } from 'react-navigation';
 import WelcomeScreen from './screens/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import CitiesScreen from './screens/CitiesScreen';
+import ForecastScreen from './screens/ForecastScreen';
 
 
 export default class App extends Component<{}> {
@@ -25,7 +26,8 @@ export default class App extends Component<{}> {
     const MainNavigator = StackNavigator({
       home: { screen: HomeScreen },
       welcome: { screen: WelcomeScreen },
-      cities: { screen: CitiesScreen }
+      cities: { screen: CitiesScreen },
+      forecast: { screen: ForecastScreen }
     });
     return (
       <Provider store={store}>
