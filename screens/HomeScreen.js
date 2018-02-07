@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, RefreshControl, FlatList } from 'react-native';
+import { 
+    View, 
+    Text, 
+    ScrollView, 
+    RefreshControl, 
+    FlatList,
+    ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import City from '../components/City';
 import Forecast from '../components/Forecast';
 import BottomTab from '../components/BottomTab';
 import Slides from '../components/Slides';
+import CustomScroll from '../components/CustomScroll';
 
 const cities = [
     { cityId: '1273874' },
@@ -46,7 +53,6 @@ class HomeScreen extends Component {
    
     renderCity = (item) => {
         if (item.item.id > 0 ){
-            //console.log(item.item);
             return(
                 <City 
                     data={item.item}
@@ -55,21 +61,22 @@ class HomeScreen extends Component {
                 />
             );
         } else {
-            //console.log(item.item);
             return <View/>;
         }
         
     }
     renderSlides(){
        
-            //console.log(this.props.data);
+            
             return (
                 <FlatList
                     pagingEnabled
                     data={this.props.data}
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                     keyExtractor={item => item.id}
                     renderItem={item => this.renderCity(item)}
+                   
                 />
             );
        

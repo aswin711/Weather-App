@@ -56,12 +56,16 @@ class City extends Component {
         const { list } = this.props.data.forecast;
         return(
            
-            <ScrollView style={styles.container} 
+            <View 
+                style={styles.container}
+            >
+            <ScrollView
                 refreshControl={
                     <RefreshControl
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh.bind(this)}
                     />
+                    
              }>
                 <Label 
                     city={ name }
@@ -83,6 +87,8 @@ class City extends Component {
                     humidity={ main.humidity }
                 />
             </ScrollView>
+            </View>
+           
             
         );
     } 
@@ -90,7 +96,7 @@ class City extends Component {
 
 const styles = {
     container: {
-        flex: 1,
+       flex: 1,
         width: SCREEN_WIDTH,
     },
 }

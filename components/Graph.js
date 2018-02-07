@@ -18,11 +18,12 @@ class Graph extends Component {
             let time = value.dt_txt.split(" ");
             let xlabel = time[1].substr(0,5);
 
-            plot.push({x: xlabel,y: value.main.temp});
+            plot.push({x: xlabel,y: parseInt(value.main.temp)});
         });
         //console.log(this.props.data);
         return (
             <View 
+                pointerEvents="none"
                 style={ styles.container}
             >
                 <Text>24 Hours Forecast</Text>
@@ -37,7 +38,8 @@ class Graph extends Component {
                          style={{
                             data: { stroke: "#c43a31" },
                         }}
-                        labelComponent={<VictoryLabel renderInPortal dy={-10}/>}
+                        labels={(datum) => datum.y}
+                        labelComponent={<VictoryLabel renderInPortal dy={-5}/>}
                     />
 
                     </VictoryGroup>
