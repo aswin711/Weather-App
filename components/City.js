@@ -46,6 +46,18 @@ class City extends Component {
 
     }
 
+    renderGraph = (list) => {
+        if (list.length > 0){
+            return(
+                <Graph 
+                data={list.slice(0,6)}
+            />
+            );
+        }
+        return <View />;
+       
+    }
+
     render() {
         
            
@@ -54,43 +66,47 @@ class City extends Component {
         //this.get24HourForecast();
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
-        return(
+        if (list !== 'undefined') {
+            return(
            
-            <View 
-                style={styles.container}
-            >
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh.bind(this)}
+                <View 
+                    style={styles.container}
+                >
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh.bind(this)}
+                        />
+                        
+                 }>
+                    <Label 
+                        city={ name }
+                        temp={ main.temp }
+                        status={ weather[0].main }
                     />
-                    
-             }>
-                <Label 
-                    city={ name }
-                    temp={ main.temp }
-                    status={ weather[0].main }
-                />
-                <Forecast 
-                    data={this.props.data.forecast}
-                    forecast={this.props.forecast}
-                    navigation={this.props.navigation}
-                />
-                <Graph 
+                    <Forecast 
+                        data={this.props.data.forecast}
+                        forecast={this.props.forecast}
+                        navigation={this.props.navigation}
+                    />
+                   <Graph 
                     data={list.slice(0,6)}
                 />
-                <Details 
-                    wind={ wind }
-                    pressure={ main.pressure }
-                    uv={ visibility }
-                    humidity={ main.humidity }
-                />
-            </ScrollView>
-            </View>
-           
-            
-        );
+                    <Details 
+                        wind={ wind }
+                        pressure={ main.pressure }
+                        uv={ visibility }
+                        humidity={ main.humidity }
+                    />
+                </ScrollView>
+                </View>
+               
+                
+            );
+        }
+        return <View />
+        
     } 
 }
 

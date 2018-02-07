@@ -17,7 +17,6 @@ class Graph extends Component {
         _.map(this.props.data,(value,index) => {
             let time = value.dt_txt.split(" ");
             let xlabel = time[1].substr(0,5);
-
             plot.push({x: xlabel,y: parseInt(value.main.temp)});
         });
         //console.log(this.props.data);

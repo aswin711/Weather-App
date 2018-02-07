@@ -67,18 +67,22 @@ class HomeScreen extends Component {
     }
     renderSlides(){
        
-            
-            return (
-                <FlatList
-                    pagingEnabled
-                    data={this.props.data}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={item => item.id}
-                    renderItem={item => this.renderCity(item)}
-                   
-                />
-            );
+            if (this.props.data.length > 2){
+                return (
+                    <FlatList
+                        pagingEnabled
+                        data={this.props.data}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={item => item.id}
+                        renderItem={item => this.renderCity(item)}
+                       
+                    />
+                );
+            } else {
+                return <View/>;
+            }
+           
        
        
     }

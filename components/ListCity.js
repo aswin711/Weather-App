@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { Card } from 'react-native-elements';
 import _ from 'lodash';
-import { countryCode } from '../utils/countrycode.json';
 
 class ListCity extends Component {
 
 
     getCountry = (code) => {
-        console.log(countryCode);
+       /* console.log(countryCode);
         _.map(countryCode, country => {
            
             if ( country.code === code ){
@@ -20,7 +19,7 @@ class ListCity extends Component {
                     </Text>
                 );
             }
-        });
+        });*/
 
         return (
             <Text 

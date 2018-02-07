@@ -18,6 +18,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import CitiesScreen from './screens/CitiesScreen';
 import ForecastScreen from './screens/ForecastScreen';
+import LocationScreen from './screens/LocationScreen';
 
 
 export default class App extends Component<{}> {
@@ -27,7 +28,8 @@ export default class App extends Component<{}> {
       home: { screen: HomeScreen },
       welcome: { screen: WelcomeScreen },
       cities: { screen: CitiesScreen },
-      forecast: { screen: ForecastScreen }
+      forecast: { screen: ForecastScreen },
+      location: { screen: LocationScreen}
     });
     return (
       <Provider store={store}>
