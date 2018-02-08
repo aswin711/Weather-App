@@ -63,15 +63,6 @@ export const cities = [
       }
     },
     {
-      "id": 529334,
-      "name": "Mar’ina Roshcha",
-      "country": "RU",
-      "coord": {
-        "lon": 37.611111,
-        "lat": 55.796391
-      }
-    },
-    {
       "id": 1269750,
       "name": "Republic of India",
       "country": "IN",

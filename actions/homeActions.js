@@ -2,7 +2,8 @@ import axios from 'axios';
 import qs from 'qs';
 import {
     FETCH_CITY,
-    FETCH_FORECAST
+    FETCH_FORECAST,
+    ADD_PENDING_DATA
 } from './types';
 
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/';
@@ -47,4 +48,8 @@ export const getForecastByCityId = ( cityId ) => async (dispatch) => {
     } catch(e) {
         console.log(e);
     }
+}
+
+export const addPendingData = (data) => {
+    return { type: ADD_PENDING_DATA, payload: data };
 }

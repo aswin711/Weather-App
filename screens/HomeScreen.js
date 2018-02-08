@@ -6,6 +6,7 @@ import {
     RefreshControl, 
     FlatList,
     ActivityIndicator } from 'react-native';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import City from '../components/City';
@@ -33,14 +34,24 @@ class HomeScreen extends Component {
         header: null
     };
     componentDidMount(){
-        this.fetchData();
+        if (this.props.cities.length > 0){
+            this.fetchData();
+        } else {
+            this.props.navigation.navigate('location');
+        }
+      
     }
 
      fetchData(){
-          cities.map(city => {
+         _.map(this.props.cities,city => {
+             console.log(city);
+            this.props.getWeatherByCityId(city.id);
+            this.props.getForecastByCityId(city.id);
+         });
+         /* cities.map(city => {
             this.props.getWeatherByCityId(city.cityId);
             this.props.getForecastByCityId(city.cityId);
-        });    
+        }); */   
     }
 
     openCitiesScreen = () => {
@@ -66,8 +77,6 @@ class HomeScreen extends Component {
         
     }
     renderSlides(){
-       
-            if (this.props.data.length > 2){
                 return (
                     <FlatList
                         pagingEnabled
@@ -79,12 +88,6 @@ class HomeScreen extends Component {
                        
                     />
                 );
-            } else {
-                return <View/>;
-            }
-           
-       
-       
     }
     render() {
             return(
@@ -104,7 +107,7 @@ const styles = {
     },
 }
 function mapStateToProps(state){
-    return { data: state.home };
+    return { data: state.home, cities: state.city };
 }
 
 export default connect(mapStateToProps,actions)(HomeScreen);

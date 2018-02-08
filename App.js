@@ -19,9 +19,10 @@ import HomeScreen from './screens/HomeScreen';
 import CitiesScreen from './screens/CitiesScreen';
 import ForecastScreen from './screens/ForecastScreen';
 import LocationScreen from './screens/LocationScreen';
+import CitiesEditScreen from './screens/CitiesEditScreen';
 
 
-export default class App extends Component<{}> {
+export default class App extends Component{
  
   render() {
     const MainNavigator = StackNavigator({
@@ -29,7 +30,8 @@ export default class App extends Component<{}> {
       welcome: { screen: WelcomeScreen },
       cities: { screen: CitiesScreen },
       forecast: { screen: ForecastScreen },
-      location: { screen: LocationScreen}
+      location: { screen: LocationScreen},
+      edit: { screen: CitiesEditScreen }
     });
     return (
       <Provider store={store}>

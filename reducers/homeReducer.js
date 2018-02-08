@@ -1,5 +1,5 @@
 import {
-    FETCH_CITY, FETCH_FORECAST
+    FETCH_CITY, FETCH_FORECAST, ADD_PENDING_DATA
 } from '../actions/types';
 
 initialState = [ {
@@ -33,6 +33,8 @@ export default function(state = initialState , action){
         });
         if ( g === 0) { state.push(action.payload); }
         return state;
+        case ADD_PENDING_DATA:
+            return action.payload;
         default:
             return state;
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import FAB from 'react-native-fab';
 import { Button } from 'react-native-elements';
@@ -10,25 +10,42 @@ const THEME_COLOR = '#70BDC6';
 
 class CitiesScreen extends Component {
 
-    static navigationOptions = {
+    constructor(props){
+        super(props);
+        const { navigate } = this.props.navigation;
+    }
+
+  
+
+    static navigationOptions  = ({ navigation }) => ({
         title: 'Manage City',
         headerStyle: {
             backgroundColor: THEME_COLOR
         },
         headerTintColor: 'white',
         headerTitleStyle: {
-            fontWeight: '100'
+            fontWeight: '100',
         },
-        headerRight: (
+        headerRight:(
             <Button
-                title="Edit"
-                color='white'
+            title="Edit"
+            color='white'
+            onPress={() => navigation.navigate('edit')}
             />
         )
-    };
+    });
+
+    navigateToEdit = () => {
+        this.props.navigation.navigate('edit');
+    }
 
     openLocationScreen = () => {
-        this.props.navigation.navigate('location',{theme: THEME_COLOR});
+        if (this.props.cities.length <= 3){
+            this.props.navigation.navigate('location',{theme: THEME_COLOR});
+        } else {
+            ToastAndroid.show("Unable to add more than 4 cities", ToastAndroid.SHORT);
+        }
+        
     }
 
     renderCity = (item) => {
@@ -43,6 +60,7 @@ class CitiesScreen extends Component {
         }  
     }
     render(){
+        console.log(this.props.cities);
         return(
             <View style={styles.container}>
                 <FlatList
@@ -51,7 +69,10 @@ class CitiesScreen extends Component {
                     renderItem={item => this.renderCity(item.item)}
                 />
 
+
+
             <FAB 
+            style={styles.fabButton}
             buttonColor={THEME_COLOR}
             iconTextColor="#FFFFFF" 
             onClickAction={() => this.openLocationScreen()} 
@@ -66,6 +87,7 @@ class CitiesScreen extends Component {
 
 const styles = {
     container: {
+        flex: 1,
         flexDirection: 'column',
     
     },
@@ -74,8 +96,8 @@ const styles = {
         width: 60,
         borderWidth: 30,
         borderRadius: 30,
-        borderColor: 'white',
-        backgroundColor: 'white',
+        borderColor: THEME_COLOR,
+        backgroundColor: THEME_COLOR,
         position: 'absolute',
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
@@ -90,7 +112,7 @@ const styles = {
 }
 
 function mapStateToProps(state){
-    return { data: state.home };
+    return { data: state.home, cities: state.city };
 }
 
 export default connect(mapStateToProps,actions)(CitiesScreen);

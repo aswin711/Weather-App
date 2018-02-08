@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import { NavigationActions } from 'react-navigation';
 import { cities } from '../utils/popular_cities';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
@@ -72,10 +73,29 @@ class LocationScreen extends Component {
         
     }
 
+    reset(){
+        return this.props
+                   .navigation
+                   .dispatch(NavigationActions.reset(
+                     {
+                        index: 0,
+                        actions: [
+                          NavigationActions.navigate({ routeName: 'home'})
+                        ]
+                      }));
+      }
+
+    addCity = (city) => {
+        this.props.addCity(city);
+        this.reset();
+    }
+
     renderList = (city) => {
         return (
             <View style={styles.list}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => this.addCity(city)}
+                >
                     <Text style={styles.listItem}>{city.name}</Text>
                 </TouchableOpacity>
             </View>
@@ -126,7 +146,7 @@ const styles = {
         backgroundColor: 'white',
         borderColor: '#222',
         borderWidth: 1,
-
+        height: 45
     },
     listItem: {
         fontSize: 14,
@@ -144,8 +164,8 @@ const styles = {
     }
 }
 
-function mapStateToProps({ location }){
-    return { location };
+function mapStateToProps({ location, city }){
+    return { location, city };
 }
 
 export default connect(mapStateToProps,actions)(LocationScreen);
