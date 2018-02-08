@@ -47,11 +47,7 @@ class HomeScreen extends Component {
              console.log(city);
             this.props.getWeatherByCityId(city.id);
             this.props.getForecastByCityId(city.id);
-         });
-         /* cities.map(city => {
-            this.props.getWeatherByCityId(city.cityId);
-            this.props.getForecastByCityId(city.cityId);
-        }); */   
+         }); 
     }
 
     openCitiesScreen = () => {
@@ -90,6 +86,7 @@ class HomeScreen extends Component {
                 );
     }
     render() {
+        console.log(this.props.data);
             return(
                 <View style={styles.container}>
                     {this.renderSlides()}

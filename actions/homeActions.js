@@ -31,7 +31,7 @@ export const getWeatherByCityId = ( cityId ) => async (dispatch) => {
         const url = buildWeatherUrl(cityId);
         let { data } = await axios.get(url);
 
-        console.log(data);
+        //console.log(data);
         dispatch({ type: FETCH_CITY, payload: { id: cityId, weather: data, forecast: {} } });
     } catch(e) {
         console.log(e);
@@ -43,7 +43,7 @@ export const getForecastByCityId = ( cityId ) => async (dispatch) => {
         const url = buildForecastUrl(cityId);
         let { data } = await axios.get(url);
 
-        console.log(data);
+        //console.log(data);
         dispatch({ type: FETCH_FORECAST, payload: { id: cityId, forecast: data, weather: {} } });
     } catch(e) {
         console.log(e);

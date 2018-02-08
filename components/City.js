@@ -83,12 +83,13 @@ class City extends Component {
                     <Label 
                         city={ name }
                         temp={ main.temp }
-                        status={ weather[0].main }
+                        status={ weather[0] }
                     />
                     <Forecast 
-                        data={this.props.data.forecast}
-                        forecast={this.props.forecast}
-                        navigation={this.props.navigation}
+                        data={ this.props.data.forecast }
+                        currentTemp={ main.temp }
+                        forecast={ this.props.forecast }
+                        navigation={ this.props.navigation }
                     />
                    <Graph 
                     data={list.slice(0,6)}

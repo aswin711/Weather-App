@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
 
+const IMG_URL = 'https://openweathermap.org/img/w/';
+const IMG_EXT = '.png';
 class Label extends Component {
     render() {
         const { city, temp, status } = this.props;
@@ -14,7 +16,14 @@ class Label extends Component {
                 <View style={styles.detailsStyle}>
                     <Text style={styles.smallTextStyle}>{ city }</Text>
                     <Text style={styles.largeTextStyle}>{ temp }°</Text>
-                    <Text style={styles.smallTextStyle}>{ status }</Text>
+                    <View style={styles.statusFrame}>
+                    <Image
+                        style={styles.iconImage}
+                        source={{ uri: `${IMG_URL}${status.icon}${IMG_EXT}`}}
+                    />
+                    <Text style={styles.smallTextStyle}>{ status.main }</Text>
+                    </View>
+                    
                 </View>
             </View>
         );
@@ -34,15 +43,28 @@ const styles = {
         position: 'absolute',
         marginTop: 20,
         marginLeft: 20,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center'
     },
     smallTextStyle: {
         fontSize: 16,
-        color: 'white'
+        color: 'white',
+        marginLeft: 5
     },
     largeTextStyle: {
-        fontSize: 35,
-        color: 'white'
+        fontSize: 60,
+        color: 'white',
+        fontWeight: '100'
+    },
+    iconImage: {
+        width: 50,
+        height: 50
+    },
+    statusFrame: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 }
 

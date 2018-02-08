@@ -33,21 +33,15 @@ class CitiesEditScreen extends Component {
 
     onDelete = (city) => {
         let cities = this.props.cities;
-        _.map(this.props.cities,(singleCity,index) => {
-            if (singleCity.id === city.id){
-                cities.splice(index,1);
+        this.props.cities.map((cityData,index) => {
+            if(cityData.id === city.id){
+                this.props.cities.splice(index,1);
             }
         });
-        this.props.addCities(cities);
+        this.props.addCities(this.props.cities);
 
-        let data = this.props.data;
-        _.map(this.props.data, (cityData,index) => {
-            console.log(cityData.id,city.id);
-           /* if (cityData.id === city.id){
-                data.splice(index,1);
-            }*/
-        });
-        //this.props.addPendingData(data);
+        let data = _.without(this.props.data,city);
+        this.props.addPendingData(data);
     }
 
     renderCity = (item) => {

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
-
+import { 
+    View, 
+    Text, 
+    TouchableOpacity,
+    Image } from 'react-native';
+const IMG_URL = 'https://openweathermap.org/img/w/';
+const IMG_EXT = '.png';
 class Forecast extends Component {
 
 
@@ -10,28 +15,43 @@ class Forecast extends Component {
 
     renderBlock = (list,start,end,index) => {
         let condition = [];
-        let temp_min = 0;
-        let temp_max = 0;
+        let temp_min = this.props.currentTemp;
+        let temp_max = this.props.currentTemp;
+        
 
         for ( let i = start; i < end ; i++ ){
             const slice = list[i];
-            condition.push(slice.weather[0].main);
-            temp_min += slice.main.temp_min;
-            temp_max += slice.main.temp_max;
+            condition.push(slice.weather[0]);
+            if (slice.main.temp_max > temp_max){
+                temp_max = slice.main.temp_max;
+            }
+            if (slice.main.temp_min < temp_min){
+                temp_min = slice.main.temp_min;
+            }
         }
 
-        let div = 5;
-        if (index != 0){
-            div = 8;
-        }
-        temp_min = parseInt(temp_min/div);
-        temp_max = parseInt(temp_max/div);
+        
+        temp_min = Math.round((temp_min + 0.00001) * 100 ) / 100 ;
+        temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
 
         return(
             <View style={styles.rowStyle}>
-                {this.renderDay(index)}
-                <Text style={styles.textStyle}>{condition[0]}</Text>
+             <View style={[ styles.singleRow,{ alignItems: 'flex-start'} ] }>
+             {this.renderDay(index)}
+             </View>
+                <View style={[styles.singleRow,{ alignItems: 'center'}]}>
+                <View style={styles.statusFrame}>
+                    <Image
+                        resizeMode="cover"
+                        style={styles.iconImage}
+                        source={{ uri: `${IMG_URL}${condition[0].icon}${IMG_EXT}`}}
+                    />
+                    <Text style={styles.textStyle}>{condition[0].main}</Text>
+                </View>
+                </View>
+                <View style={[styles.singleRow, {alignItems: 'flex-end'}]}>
                 <Text style={styles.textStyle}>{(temp_min)}°/{(temp_max)}°</Text>
+                </View> 
                </View>
         );
     }
@@ -101,6 +121,7 @@ class Forecast extends Component {
         const { list } = this.props.data;
         return(
             <View style={styles.container}>
+               
                 {this.renderToday(list)}
                
                <View style={styles.lineStyle} />
@@ -139,19 +160,20 @@ const styles = {
     },
     rowStyle: {
         flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center',
+        padding: 10,   
+    },
+    singleRow:{
+        flex: 1,
+        flexDirection: 'column',
         justifyContent: 'center'
     },
     textStyle: {
         fontSize: 16,
-        flex: 1,
-        color: '#444444',
-        padding: 5
+        color: '#444444'
     },
     lineStyle: {
-        height: 0.5,
-        backgroundColor: '#e1e1e1'
+        height: 1,
+        backgroundColor: '#999999'
     },
     labelStyle: {
         justifyContent: 'center',
@@ -161,6 +183,15 @@ const styles = {
     labelTextStyle: {
         fontSize: 14,
         color: '#444444'
+    },
+    iconImage: {
+        width: 50,
+        height: 50
+    },
+    statusFrame: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }
 
