@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ToastAndroid } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import FAB from 'react-native-fab';
 import { Button } from 'react-native-elements';
@@ -28,9 +29,17 @@ class CitiesScreen extends Component {
         },
         headerRight:(
             <Button
-            title="Edit"
-            color='white'
-            onPress={() => navigation.navigate('edit')}
+                transparent
+                icon={
+                    <Icon
+                      name='md-create'
+                      size={30}
+                      color='white'
+                    />
+                  }
+                title = "Edit"
+                color='white'
+                onPress={() => navigation.navigate('edit')}
             />
         )
     });
@@ -60,7 +69,7 @@ class CitiesScreen extends Component {
         }  
     }
     render(){
-        console.log(this.props.cities);
+        //console.log(this.props.cities);
         return(
             <View style={styles.container}>
                 <FlatList
@@ -68,8 +77,6 @@ class CitiesScreen extends Component {
                     keyExtractor={item => item.id}
                     renderItem={item => this.renderCity(item.item)}
                 />
-
-
 
             <FAB 
             style={styles.fabButton}

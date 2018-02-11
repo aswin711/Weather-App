@@ -9,8 +9,11 @@ const store = createStore(
     {},
     compose(
         applyMiddleware(thunk),
+        //autoRehydrate()
     )
 );
+
+//persistStore(store, { storage: AsyncStorage, whitelist: ['city']});
 
 
 export default store;

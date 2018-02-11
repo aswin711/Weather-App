@@ -6,21 +6,16 @@ import {
     RefreshControl, 
     FlatList,
     ActivityIndicator } from 'react-native';
+import { Button } from 'react-native-elements';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import City from '../components/City';
+import CityList from '../components/CityList';
 import Forecast from '../components/Forecast';
 import BottomTab from '../components/BottomTab';
 import Slides from '../components/Slides';
 import CustomScroll from '../components/CustomScroll';
-
-const cities = [
-    { cityId: '1273874' },
-    { cityId: '1283710' },
-    { cityId: '1269750' },
-    { cityId: '1271231' }
-];
 
 class HomeScreen extends Component {
     constructor(props){
@@ -35,7 +30,7 @@ class HomeScreen extends Component {
     };
     componentDidMount(){
         if (this.props.cities.length > 0){
-            this.fetchData();
+            //this.fetchData();
         } else {
             this.props.navigation.navigate('location');
         }
@@ -44,9 +39,9 @@ class HomeScreen extends Component {
 
      fetchData(){
          _.map(this.props.cities,city => {
-             console.log(city);
-            this.props.getWeatherByCityId(city.id);
-            this.props.getForecastByCityId(city.id);
+           // this.props.getWeatherByCityId(city.id);
+           // this.props.getForecastByCityId(city.id);
+           this.props.fetchData(city.id);
          }); 
     }
 
@@ -67,10 +62,25 @@ class HomeScreen extends Component {
                     navigation={this.props.navigation}
                 />
             );
-        } else {
-            return <View/>;
-        }
+        } /*else {
+            return (
+                <View style={styles.container}>
+                    <Text>Wait city is loading...........</Text>
+                    <Button 
+                        title="Refresh"
+                        onPress={() => this.componentDidMount()}
+                    /> 
+                </View>
+            );
+        }*/
         
+    }
+    renderEmptyComponent = () => {
+        return(
+            <View style={styles.container }>
+                <Text style={styles.emptyText}>No cities added yet!!!</Text>
+            </View>
+        );
     }
     renderSlides(){
                 return (
@@ -78,7 +88,9 @@ class HomeScreen extends Component {
                         pagingEnabled
                         data={this.props.data}
                         horizontal
+                        alwaysBounceVertical={false}
                         showsHorizontalScrollIndicator={false}
+                        ListEmptyComponent={this.renderEmptyComponent()}
                         keyExtractor={item => item.id}
                         renderItem={item => this.renderCity(item)}
                        
@@ -89,7 +101,9 @@ class HomeScreen extends Component {
         console.log(this.props.data);
             return(
                 <View style={styles.container}>
-                    {this.renderSlides()}
+                   <CityList 
+                        navigation={this.props.navigation}
+                   />
                     <BottomTab 
                          add={ () => this.openCitiesScreen()}
                     />
@@ -100,8 +114,15 @@ class HomeScreen extends Component {
 
 const styles = {
     container: {
-        flex: 1
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
+    emptyText: {
+        fontSize: 18,
+        color: '#999999',
+        fontWeight: "300"
+    }
 }
 function mapStateToProps(state){
     return { data: state.home, cities: state.city };

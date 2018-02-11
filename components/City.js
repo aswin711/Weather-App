@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, View, RefreshControl, Dimensions } from 'react-native';
+import { ScrollView, Text, View, RefreshControl, Dimensions, ToolbarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import {
+AppBarLayout,
+CoordinatorLayout,
+CollapsingToolbarLayout,
+CollapsingParallax
+} from 'react-native-collapsing-toolbar';
+import NestedScrollView from 'react-native-nested-scroll-view';
+
 import * as actions from '../actions';
 import Details from './Details';
 import Forecast from './Forecast';
@@ -18,15 +26,11 @@ class City extends Component {
             refreshing: false
         };
     }
-
-    componentDidMount(){
-        //this.fetchData();
-    }
     
-
     fetchCity(){
-        this.props.getWeatherByCityId(this.props.data.id);
-        this.props.getForecastByCityId(this.props.data.id);
+       // this.props.getWeatherByCityId(this.props.data.id);
+       // this.props.getForecastByCityId(this.props.data.id);
+       this.props.fetchData(this.props.data.id);
     }
 
     onRefresh() {
@@ -37,72 +41,99 @@ class City extends Component {
 
     get24HourForecast(){
         const { list } = this.props.data.forecast;
-        const currentTime = Date.now() / 1000 ;
-        const day = 24 * 3600 ;
         _.map(list, single => {
             const { dt, dt_txt, main, weather} = single;
-            console.log(dt_txt,main.temp);
+        });
+    }
+
+    
+  convert24To12 = (time) => {
+    switch(time){
+      case '00:00':
+          return '12am';
+      case '03:00':
+          return '3am';
+      case '06:00':
+          return '6am';
+      case '09:00':
+          return '9am';
+      case '12:00':
+          return '12pm';
+      case '15:00':
+          return '3pm';
+      case '18:00':
+          return '6pm';
+      case '21:00':
+          return '9pm';
+      default:
+          return '12am';
+    }
+  }
+
+    getPlotPoints = () => {
+        let plot = [];
+        let list = this.props.data.forecast.list.slice(0,8);
+        let low = 0;
+        let high = 0;
+        _.map(list,(value,index) => {
+            let time = value.dt_txt.split(" ");
+            let xlabel = time[1].substr(0,5);
+            y_label = parseInt(value.main.temp);
+            if ( low < y_label ) {
+              low = y_label;
+            }
+            if ( high > y_label ){
+              high = y_label;
+            }
+            plot.push({x: this.convert24To12(xlabel),y: y_label});
         });
 
+        return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]} };
     }
 
-    renderGraph = (list) => {
-        if (list.length > 0){
-            return(
-                <Graph 
-                data={list.slice(0,6)}
-            />
-            );
-        }
-        return <View />;
-       
-    }
-
-    render() {
-        
-           
-        //console.log(this.props.data);
-        //console.log(new Date().getMinutes() );
-        //this.get24HourForecast();
+    render() {  
+        const HEADER_HEIGHT = 300
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
         if (list !== 'undefined') {
             return(
-           
-                <View 
-                    style={styles.container}
-                >
-                <ScrollView
-                    refreshControl={
+    
+                <View style={styles.container}>
+
+                    <ScrollView
+                     horizontal={false}
+                     refreshControl={
                         <RefreshControl
                         refreshing={this.state.refreshing}
                         onRefresh={this.onRefresh.bind(this)}
                         />
                         
-                 }>
-                    <Label 
-                        city={ name }
-                        temp={ main.temp }
-                        status={ weather[0] }
-                    />
-                    <Forecast 
-                        data={ this.props.data.forecast }
-                        currentTemp={ main.temp }
-                        forecast={ this.props.forecast }
-                        navigation={ this.props.navigation }
-                    />
-                   <Graph 
-                    data={list.slice(0,6)}
-                />
-                    <Details 
-                        wind={ wind }
-                        pressure={ main.pressure }
-                        uv={ visibility }
-                        humidity={ main.humidity }
-                    />
-                </ScrollView>
+                    }>
+
+                        <Label 
+                            city={ name }
+                            temp={ main.temp }
+                            status={ weather[0] }
+                        />
+                        <Forecast 
+                            data={ list }
+                            currentTemp={ main.temp }
+                            forecast={ this.props.forecast }
+                            navigation={ this.props.navigation }
+                        />
+                        <Graph 
+                            title="24 Hours Forecast"
+                            data={this.getPlotPoints()}
+                        />
+                        <Details 
+                            wind={ wind }
+                            pressure={ main.pressure }
+                            uv={ visibility }
+                            humidity={ main.humidity }
+                        />
+                    </ScrollView>
                 </View>
-               
+                   
                 
             );
         }

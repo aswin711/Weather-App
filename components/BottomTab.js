@@ -31,7 +31,7 @@ class BottomTab extends Component {
                 </View>
                 <View style={styles.tab3}>
                 <TouchableOpacity>
-                    <Icon name="md-apps" size={35} color="#222"/>
+                    <Icon name="md-more" size={35} color="#222"/>
                 </TouchableOpacity>
                 </View>
      
@@ -52,6 +52,8 @@ const styles = {
         flex: 1,
         flexDirection: 'row',
         padding: 7,
+        marginLeft: 5,
+        marginRight: 5
     },
     tabTextStyle: {
         color: '#b2b2b2',

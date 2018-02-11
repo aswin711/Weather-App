@@ -3,69 +3,105 @@ import {
     View, 
     Text, 
     TouchableOpacity,
-    Image } from 'react-native';
+    Image, 
+    FlatList} from 'react-native';
+import _ from 'lodash';
 const IMG_URL = 'https://openweathermap.org/img/w/';
 const IMG_EXT = '.png';
 class Forecast extends Component {
 
 
-    openForeCastScreen = () => {
-        this.props.navigation.navigate('forecast',{forecast: this.props.data.list});
+    openForeCastScreen = (list) => {
+        this.props.navigation.navigate('forecast',{forecast: list});
     }
 
-    renderBlock = (list,start,end,index) => {
+    getForecastReport = (forecast) => {
+        let report = [];
+        let count = 0;
+        console.log(forecast.length);
+        forecast.map((data,index_out) => {
+
+            let dateTime = data.dt_txt;
+            let split_dateTime = dateTime.split(" ");
+            let date = split_dateTime[0];
+            let time = split_dateTime[1];
+            let split_date = date.split("-");
+            let year = split_date[0];
+            let mon = split_date[1];
+            let day = split_date[2];
+
+
+            if ( report.length > 0) {
+                let f = 0;
+                _.map(report, (reportData,index_inner) => {
+                    if (reportData.date === date){
+                        f = 1;
+                        reportData.list.push({ time, main: data.main,weather: data.weather[0], wind: data.wind });
+                    } 
+                });
+                if ( f === 0){
+                    let list = [];
+                    list.push({ time, main: data.main, weather: data.weather[0], wind: data.wind });
+                    report.push({id: count++, date, list });
+                }
+            } else {
+                let list = [];
+                list.push({ time, main: data.main, weather: data.weather[0], wind: data.wind });
+                report.push({id: count++, date, list });
+            }
+        });
+
+        return report;
+    }
+
+    renderBlock = (item) => {
+
         let condition = [];
-        let temp_min = this.props.currentTemp;
-        let temp_max = this.props.currentTemp;
-        
-
-        for ( let i = start; i < end ; i++ ){
-            const slice = list[i];
-            condition.push(slice.weather[0]);
-            if (slice.main.temp_max > temp_max){
-                temp_max = slice.main.temp_max;
+        let data = item.item;
+        if (data.id < 3) {
+            let temp_min = data.list[0].main.temp_min;
+            let temp_max = data.list[0].main.temp_max;
+            console.log(data);
+    
+            for ( let i = 0; i < data.list.length; i++ ){
+                const slice = data.list[i];
+                condition.push({ weather: slice.weather, wind: slice.wind});
+                if (slice.main.temp_max > temp_max){
+                    temp_max = slice.main.temp_max;
+                }
+                if (slice.main.temp_min < temp_min){
+                    temp_min = slice.main.temp_min;
+                }
             }
-            if (slice.main.temp_min < temp_min){
-                temp_min = slice.main.temp_min;
-            }
-        }
+    
+            
+            temp_min = Math.round((temp_min + 0.00001) * 100 ) / 100 ;
+            temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
+    
+            return(
+                <View style={styles.rowStyle}>
+                 <View style={[ styles.singleRow,{ alignItems: 'flex-start'} ] }>
+                 {this.renderDay(data.id)}
+                 </View>
+                    <View style={[styles.singleRow,{ alignItems: 'center'}]}>
+                    <View style={styles.statusFrame}>
+                        <Image
+                            resizeMode="cover"
+                            style={styles.iconImage}
+                            source={{ uri: `${IMG_URL}${condition[0].weather.icon}${IMG_EXT}`}}
+                        />
+                        <Text style={styles.textStyle}>{condition[0].weather.main}</Text>
+                    </View>
+                    </View>
+                    <View style={[styles.singleRow, {alignItems: 'flex-end'}]}>
+                    <Text style={styles.textStyle}>{(temp_min)}°/{(temp_max)}°</Text>
+                    </View> 
+                   </View>
+            );
+        } 
 
+        return <View />;
         
-        temp_min = Math.round((temp_min + 0.00001) * 100 ) / 100 ;
-        temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
-
-        return(
-            <View style={styles.rowStyle}>
-             <View style={[ styles.singleRow,{ alignItems: 'flex-start'} ] }>
-             {this.renderDay(index)}
-             </View>
-                <View style={[styles.singleRow,{ alignItems: 'center'}]}>
-                <View style={styles.statusFrame}>
-                    <Image
-                        resizeMode="cover"
-                        style={styles.iconImage}
-                        source={{ uri: `${IMG_URL}${condition[0].icon}${IMG_EXT}`}}
-                    />
-                    <Text style={styles.textStyle}>{condition[0].main}</Text>
-                </View>
-                </View>
-                <View style={[styles.singleRow, {alignItems: 'flex-end'}]}>
-                <Text style={styles.textStyle}>{(temp_min)}°/{(temp_max)}°</Text>
-                </View> 
-               </View>
-        );
-    }
-
-    renderToday = (list) => {
-       return this.renderBlock(list,0,5,0);
-    }
-
-    renderTommorrow = (list) => {
-        return this.renderBlock(list,5,13,1);
-    }
-
-    renderDayAfterTmrw = (list) => {
-      return this.renderBlock(list,13,21,2);
     }
 
     renderDay = (index) => {
@@ -80,11 +116,13 @@ class Forecast extends Component {
         } else {
             const date = new Date();
             const day = date.getDay();
-            return this.renderDate(day+2);
+            const dayAfterTmrw = (day + index) > 6 ? (day + index) -6 - 1 : (day + index) ;
+            return this.renderDate(dayAfterTmrw);
         }
     }
 
     renderDate = (num) => {
+        
         let day = "";
         switch(num) {
             case 0: 
@@ -118,25 +156,22 @@ class Forecast extends Component {
     }
 
     render() {
-        const { list } = this.props.data;
+        console.log(this.props.data);
+        const list = this.getForecastReport(this.props.data);
         return(
             <View style={styles.container}>
                
-                {this.renderToday(list)}
-               
-               <View style={styles.lineStyle} />
-
-               {this.renderTommorrow(list)}
-               <View style={styles.lineStyle} />
-
-               {this.renderDayAfterTmrw(list)}
-               <View style={styles.lineStyle} />
+               <FlatList
+                    data={list}
+                    keyExtractor={item => item.date}
+                    renderItem={item => this.renderBlock(item)}
+               />
 
                <TouchableOpacity
-                    onPress={() => this.openForeCastScreen()} 
+                    onPress={() => this.openForeCastScreen(list)} 
                >
                 <View  style={styles.labelStyle}>
-                <Text style={styles.labelTextStyle}>5 Days Forecast</Text>
+                <Text style={styles.forecastLabel}>5 Days Forecast</Text>
                 </View>
                    
                </TouchableOpacity>
@@ -150,9 +185,7 @@ const styles = {
     container: {
         flexDirection: 'column',
         backgroundColor: 'white',
-        padding: 5,
-        alignItems: 'center',
-        justifyContent: 'center'
+        padding: 5
     },
     detailsTextStyle: {
         fontSize: 12,
@@ -192,6 +225,11 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    forecastLabel: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#666666'
     }
 }
 

@@ -1,58 +1,58 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-
+import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
+import _ from 'lodash';
+const IMG_URL = 'https://openweathermap.org/img/w/';
+const IMG_EXT = '.png';
 class ForecastScreen extends Component {
 
     static navigationOptions = {
         header: null
     };
 
-    renderBlock = (list,start,end,index) => {
+    renderBlock = (item) => {
+
         let condition = [];
-        let temp_min = 0;
-        let temp_max = 0;
-
-        for ( let i = start; i < end ; i++ ){
-            const slice = list[i];
-            condition.push(slice.weather[0].main);
-            temp_min += slice.main.temp_min;
-            temp_max += slice.main.temp_max;
-        }
-
-        let div = 5;
-        if (index != 0){
-            div = 8;
-        }
-        temp_min = parseInt(temp_min/div);
-        temp_max = parseInt(temp_max/div);
-
-        return(
-            <View style={styles.rowStyle}>
-                {this.renderDay(index)}
-                <Text style={styles.textStyle}>{condition[0]}</Text>
-                <Text style={styles.textStyle}>{(temp_min)}°/{(temp_max)}°</Text>
-               </View>
-        );
-    }
-
-    renderToday = (list) => {
-       return this.renderBlock(list,0,5,0);
-    }
-
-    renderTommorrow = (list) => {
-        return this.renderBlock(list,5,13,1);
-    }
-
-    renderDayAfterTmrw = (list) => {
-      return this.renderBlock(list,13,21,2);
-    }
-
-    renderFourthDay = (list) => {
-        return this.renderBlock(list,21,29,3);
-    }
-
-    renderFifthDay = (list) => {
-        return this.renderBlock(list,29,37,4);
+        let data = item.item;
+            let temp_min = data.list[0].main.temp_min;
+            let temp_max = data.list[0].main.temp_max;
+            console.log(data);
+    
+            for ( let i = 0; i < data.list.length; i++ ){
+                const slice = data.list[i];
+                condition.push({ weather: slice.weather, wind: slice.wind});
+                if (slice.main.temp_max > temp_max){
+                    temp_max = slice.main.temp_max;
+                }
+                if (slice.main.temp_min < temp_min){
+                    temp_min = slice.main.temp_min;
+                }
+            }
+    
+            
+            temp_min = Math.round((temp_min + 0.00001) * 100 ) / 100 ;
+            temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
+    
+            return(
+                <View style={styles.rowStyle}>
+                 <View style={[ styles.singleRow,{ alignItems: 'flex-start'} ] }>
+                 {this.renderDay(data.id)}
+                 </View>
+                    <View style={[styles.singleRow,{ alignItems: 'center'}]}>
+                    <View style={styles.statusFrame}>
+                        <Image
+                            resizeMode="cover"
+                            style={styles.iconImage}
+                            source={{ uri: `${IMG_URL}${condition[0].weather.icon}${IMG_EXT}`}}
+                        />
+                        <Text style={styles.textStyle}>{condition[0].weather.main}</Text>
+                    </View>
+                    </View>
+                    <View style={[styles.singleRow, {alignItems: 'flex-end'}]}>
+                    <Text style={styles.textStyle}>{(temp_min)}°/{(temp_max)}°</Text>
+                    </View> 
+                   </View>
+            );
+        
     }
 
     renderDay = (index) => {
@@ -67,11 +67,13 @@ class ForecastScreen extends Component {
         } else {
             const date = new Date();
             const day = date.getDay();
-            return this.renderDate(day+index);
+            const dayAfterTmrw = (day + index) > 6 ? (day + index) -6 - 1 : (day + index) ;
+            return this.renderDate(dayAfterTmrw);
         }
     }
 
     renderDate = (num) => {
+        
         let day = "";
         switch(num) {
             case 0: 
@@ -107,29 +109,17 @@ class ForecastScreen extends Component {
     render() {
         const { params } = this.props.navigation.state;
         const { forecast } = params;
-        console.log(params);
         return(
             <View style={styles.container}>
                 <View style={styles.titleStyle}>
-                <Text style={styles.titleTextStyle}>5 Days Forecast</Text>
+                <Text style={styles.textStyle}>5 Days Forecast</Text>
                 <Text>2/6 - 2/10</Text>
                 </View>
-                <View style={styles.content}>
-                {this.renderToday(forecast)}
-               
-               <View style={styles.lineStyle} />
-
-               {this.renderTommorrow(forecast)}
-               <View style={styles.lineStyle} />
-
-               {this.renderDayAfterTmrw(forecast)}
-               <View style={styles.lineStyle} />
-               {this.renderFourthDay(forecast)}
-               <View style={styles.lineStyle} />
-            
-               {this.renderFifthDay(forecast)}
-               <View style={styles.lineStyle} />
-            </View>
+                <FlatList
+                    data={forecast}
+                    keyExtractor={item => item.id}
+                    renderItem={item => this.renderBlock(item)}
+                />
             <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
                 <TouchableOpacity
                     onPress={() => this.props.navigation.goBack()}
@@ -144,25 +134,13 @@ class ForecastScreen extends Component {
 
 const styles = {
     container: {
-        flex: 1,
-        backgroundColor: 'white'
-    },
-    titleStyle: {
-        alignItems: 'center',
-        marginTop: 20,
-        flexDirection: 'column'
-    },
-    titleTextStyle: {
-        fontSize: 25,
-        color: '#222222',
-    },
-    content: {
         flexDirection: 'column',
         backgroundColor: 'white',
-        padding: 5,
-        alignItems: 'center',
+        padding: 5
+    },
+    titleStyle: {
         justifyContent: 'center',
-        marginTop: 30
+        alignItems: 'center'
     },
     detailsTextStyle: {
         fontSize: 12,
@@ -170,19 +148,20 @@ const styles = {
     },
     rowStyle: {
         flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center',
+        padding: 10,   
+    },
+    singleRow:{
+        flex: 1,
+        flexDirection: 'column',
         justifyContent: 'center'
     },
     textStyle: {
         fontSize: 16,
-        flex: 1,
-        color: '#444444',
-        padding: 5
+        color: '#444444'
     },
     lineStyle: {
-        height: 0.5,
-        backgroundColor: '#e1e1e1'
+        height: 1,
+        backgroundColor: '#999999'
     },
     labelStyle: {
         justifyContent: 'center',
@@ -192,6 +171,20 @@ const styles = {
     labelTextStyle: {
         fontSize: 14,
         color: '#444444'
+    },
+    iconImage: {
+        width: 50,
+        height: 50
+    },
+    statusFrame: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    forecastLabel: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#666666'
     }
 }
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Button, Header } from 'react-native-elements';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -9,24 +10,28 @@ import EditCity from '../components/EditCity';
 const THEME_COLOR = '#70BDC6';
 
 class CitiesEditScreen extends Component {
-    static navigationOptions = ({navigation}) => ({
-        title: 'Manage City',
-        header: (
-            <Header 
-                backgroundColor={THEME_COLOR}
-                leftComponent={
-                    <Button 
-                    title='Cancel' 
-                    textStyle={{ color: 'white', fontSize: 12}}
-                    onPress={() => navigation.goBack()}
-                    />}
-                centerComponent={{ text: 'Edit', style:{ color: '#FFF', fontSize: 14}}}
-                rightComponent={
-                    <Button 
-                    title='OK'
-                    textStyle={{ color: 'white', fontSize: 12}}
-                    onPress={() => console.log("OK")}
-                    />}
+    static navigationOptions  = ({ navigation }) => ({
+        title: 'Edit',
+        headerStyle: {
+            backgroundColor: THEME_COLOR
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: {
+            fontWeight: '100',
+        },
+        headerRight:(
+            <Button
+                transparent
+                icon={
+                    <Icon
+                      name='md-create'
+                      size={30}
+                      color='white'
+                    />
+                  }
+                title = "OK"
+                color='white'
+                onPress={() => console.log("OK")}
             />
         )
     });

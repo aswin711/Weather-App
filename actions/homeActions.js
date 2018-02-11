@@ -1,9 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
 import {
-    FETCH_CITY,
-    FETCH_FORECAST,
-    ADD_PENDING_DATA
+    ADD_PENDING_DATA,
+    FETCH_WEATHER
 } from './types';
 
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/';
@@ -26,26 +25,16 @@ const buildForecastUrl = (id) => {
     return `${BASE_URL}${FORECAST_DETAILS}${query}`;
 }
 
-export const getWeatherByCityId = ( cityId ) => async (dispatch) => {
-    try{
-        const url = buildWeatherUrl(cityId);
-        let { data } = await axios.get(url);
+export const fetchData = (id) => async (dispatch) => {
+    try {
+        const weatherUrl = buildWeatherUrl(id);
+        const forecastUrl = buildForecastUrl(id);
 
-        //console.log(data);
-        dispatch({ type: FETCH_CITY, payload: { id: cityId, weather: data, forecast: {} } });
-    } catch(e) {
-        console.log(e);
-    }
-};
+        let weather = await axios.get(weatherUrl);
+        let forecast = await axios.get(forecastUrl);
 
-export const getForecastByCityId = ( cityId ) => async (dispatch) => {
-    try{
-        const url = buildForecastUrl(cityId);
-        let { data } = await axios.get(url);
-
-        //console.log(data);
-        dispatch({ type: FETCH_FORECAST, payload: { id: cityId, forecast: data, weather: {} } });
-    } catch(e) {
+        dispatch({ type: FETCH_WEATHER, payload: { id: id, weather: weather.data, forecast: forecast.data }});
+    }catch(e){
         console.log(e);
     }
 }

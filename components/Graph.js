@@ -8,39 +8,46 @@ import {
     VictoryTheme,
     VictoryLabel,
     VictoryAxis,
-    VictoryGroup } from 'victory-native';
+    VictoryGroup,
+    VictoryScatter } from 'victory-native';
 
 class Graph extends Component {
 
+
+
     render() {
-        let plot = [];
-        _.map(this.props.data,(value,index) => {
-            let time = value.dt_txt.split(" ");
-            let xlabel = time[1].substr(0,5);
-            plot.push({x: xlabel,y: parseInt(value.main.temp)});
-        });
-        //console.log(this.props.data);
+        const { plot, domain, range } = this.props.data;
+        console.log(plot);
         return (
             <View 
                 pointerEvents="none"
                 style={ styles.container}
             >
-                <Text>24 Hours Forecast</Text>
+                <Text style={styles.label}>{ this.props.title }</Text>
                 <VictoryChart
-                    domain={{ y: [0,50]}}
+                  height={300}
                 >
                     <VictoryAxis />
+                    <VictoryAxis
+                      dependentAxis
+                      domain={domain}
+                    />
                     <VictoryGroup
                         data={plot}
                     >
                     <VictoryLine
+                        interpolation='natural'
+                        range={range}
                          style={{
-                            data: { stroke: "#c43a31" },
+                            data: { stroke: "#c43a31" , strokeWidth: 3, strokeLineCap: 'round' },
                         }}
-                        labels={(datum) => datum.y}
-                        labelComponent={<VictoryLabel renderInPortal dy={-5}/>}
+                        labels={(datum) => `${datum.y}°`}
+                        labelComponent={<VictoryLabel renderInPortal dy={-5} dx={6}/>}
                     />
-
+                    <VictoryScatter
+                        data={plot}
+                        size={5}
+                    />
                     </VictoryGroup>
                 </VictoryChart>
             </View>
@@ -56,6 +63,11 @@ const styles = {
         padding: 5,
         marginTop: 10
     },
+    label: {
+        fontSize: 14,
+        color: '#444444',
+        fontWeight: '500'
+    }
 }
 
 export default Graph;
