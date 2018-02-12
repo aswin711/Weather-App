@@ -91,8 +91,8 @@ class City extends Component {
         return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]} };
     }
 
-    render() {  
-        const HEADER_HEIGHT = 300
+    renderContainer() {
+        const HEADER_HEIGHT = 300;
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
         if (list !== 'undefined') {
@@ -136,8 +136,16 @@ class City extends Component {
                    
                 
             );
-        }
-        return <View />
+    }
+}
+
+    render() {  
+        const HEADER_HEIGHT = 300;
+         return(
+             <View>
+                  {this.renderContainer()}
+             </View> 
+         );
         
     } 
 }

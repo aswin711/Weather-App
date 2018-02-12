@@ -29,18 +29,13 @@ class HomeScreen extends Component {
         header: null
     };
     componentDidMount(){
-        if (this.props.cities.length > 0){
-            //this.fetchData();
-        } else {
+        if (this.props.cities.length === 0){
             this.props.navigation.navigate('location');
-        }
-      
+        } 
     }
 
      fetchData(){
          _.map(this.props.cities,city => {
-           // this.props.getWeatherByCityId(city.id);
-           // this.props.getForecastByCityId(city.id);
            this.props.fetchData(city.id);
          }); 
     }

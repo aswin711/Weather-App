@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, processColor } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Button, Header } from 'react-native-elements';
 import _ from 'lodash';
@@ -10,6 +10,12 @@ import EditCity from '../components/EditCity';
 const THEME_COLOR = '#70BDC6';
 
 class CitiesEditScreen extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            deleteItems: []
+        }
+    }
     static navigationOptions  = ({ navigation }) => ({
         title: 'Edit',
         headerStyle: {
@@ -36,10 +42,13 @@ class CitiesEditScreen extends Component {
         )
     });
 
+   
+
     onDelete = (city) => {
-        let cities = this.props.cities;
+        let deletedCity = "";
         this.props.cities.map((cityData,index) => {
             if(cityData.id === city.id){
+                deletedCity = cityData.id;
                 this.props.cities.splice(index,1);
             }
         });
@@ -47,6 +56,13 @@ class CitiesEditScreen extends Component {
 
         let data = _.without(this.props.data,city);
         this.props.addPendingData(data);
+
+       /* let currentDeletedItems = this.state.deleteItems;
+        this.setState({
+            deleteItems: currentDeletedItems.push({ city: deletedCity, data: city })
+        });
+
+        console.log(this.state.deleteItems);*/
     }
 
     renderCity = (item) => {

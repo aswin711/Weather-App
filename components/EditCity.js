@@ -1,33 +1,23 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Card, Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
+
+import { code } from '../utils/country_code';
 
 class ListCity extends Component {
 
 
-    getCountry = (code) => {
-       /* console.log(countryCode);
-        _.map(countryCode, country => {
-           
-            if ( country.code === code ){
-                return (
-                    <Text 
-                        style={this.styles.countryNameStyle}
-                    >
-                    {country.name}
-                    </Text>
-                );
+    getCountry = (country_code) => {
+        let countryName = "";
+        code.map(country => {
+            if (country.code === country_code){
+                countryName = country.name;
             }
-        });*/
+        });
 
-        return (
-            <Text 
-                
-            >
-            {code}
-            </Text>
-        );
+        return countryName;
     }
 
     render() {
@@ -46,16 +36,21 @@ class ListCity extends Component {
 
         return(
            <Card>
-               <View style={{ flex: 1, flexDirection: 'row'}}>
+               <View style={{ flex: 1, flexDirection: 'row', height: 50}}>
                <View style={styles.deleteStyle}>
-                    <Button 
-                        title="Delete"
-                        onPress={this.props.delete}
-                    />
+                   <TouchableOpacity
+                    onPress={this.props.delete}
+                   >
+                       <Icon
+                            name="md-remove-circle"
+                            color="#c43a31"
+                            size={30}
+                            />
+                   </TouchableOpacity>
                </View>
                <View style={cityDetailsStyle}>
                         <Text style={cityNameStyle}>{name}</Text>
-                        {this.getCountry(sys.country)}
+                        <Text style={countryNameStyle}>{this.getCountry(sys.country)}</Text>
                 </View>
                </View>
                  
@@ -66,8 +61,11 @@ class ListCity extends Component {
 
 const styles = {
     cityDetailsStyle: {
+        flex: 0.8,
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginLeft: 15
     },
     cityDescriptionStyle: {
         flexDirection: 'column',
@@ -83,11 +81,14 @@ const styles = {
         color: '#222222'
     },
     countryNameStyle: {
-        fontSize: 20,
-        color: '#444444'
+        fontSize: 16,
+        color: '#999999'
     },
     deleteStyle: {
-        flex: 0.3
+        flex: 0.2,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        marginLeft: 15
     }
 };
 

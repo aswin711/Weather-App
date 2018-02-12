@@ -55,7 +55,7 @@ class LocationScreen extends Component {
         if (this.props.location.length > 0) {
             return (
                 <View>
-                    <Text>Results</Text>
+                    <Text style={styles.label}>Results</Text>
                     <FlatList
                         data={this.props.location}
                         keyExtractor={city => city.id}
@@ -96,19 +96,23 @@ class LocationScreen extends Component {
                 <TouchableOpacity
                     onPress={() => this.addCity(city)}
                 >
-                    <Text style={styles.listItem}>{city.name}</Text>
+                <View >
+                <Text style={styles.listItem}>{city.name}</Text>
+                </View>
+              
                 </TouchableOpacity>
             </View>
         );
     }
 
     renderPopularCities = () => {
-        console.log(cities);
         return (
             <View>
-                <Text>Popular Cities</Text>
+                <Text style={styles.label}>Popular Cities</Text>
                 <FlatList
                     data={cities}
+                    numColumns={3}
+                    key={city => city.name}
                     keyExtractor={city => city.id}
                     renderItem={city => this.renderList(city.item)}
                 />
@@ -141,12 +145,18 @@ class LocationScreen extends Component {
 const styles = {
     container: {
         flex: 1,
+        backgroundColor: '#f2f2f2'
     },
     list: {
         backgroundColor: 'white',
-        borderColor: '#222',
+        borderColor: '#f9f9f9',
         borderWidth: 1,
-        height: 45
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 10,
+        marginTop: 10,
+        padding: 10
     },
     listItem: {
         fontSize: 14,
@@ -161,6 +171,11 @@ const styles = {
     noResultsText: {
         fontSize: 16,
         color: '#444444'
+    },
+    label:{
+        fontSize: 16,
+        color: '#444',
+        fontWeight: '100'
     }
 }
 

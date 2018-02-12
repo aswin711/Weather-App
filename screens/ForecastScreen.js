@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Card } from 'react-native-elements';
+import { TabNavigator } from 'react-navigation';
 import _ from 'lodash';
+import WelcomeScreen from './WelcomeScreen';
 const IMG_URL = 'https://openweathermap.org/img/w/';
 const IMG_EXT = '.png';
 class ForecastScreen extends Component {
@@ -57,13 +60,9 @@ class ForecastScreen extends Component {
 
     renderDay = (index) => {
         if (index == 0){
-            return(
-                <Text style={styles.textStyle}>Today</Text>
-            );
+            return 'Today';
         } else if (index == 1){
-            return(
-                <Text style={styles.textStyle}>Tommorrow</Text>
-            );
+            return 'Tomorrow';
         } else {
             const date = new Date();
             const day = date.getDay();
@@ -71,6 +70,29 @@ class ForecastScreen extends Component {
             return this.renderDate(dayAfterTmrw);
         }
     }
+
+    convert24To12 = (time) => {
+        switch(time){
+          case '00:00:00':
+              return '12am';
+          case '03:00:00':
+              return '3am';
+          case '06:00:00':
+              return '6am';
+          case '09:00:00':
+              return '9am';
+          case '12:00:00':
+              return '12pm';
+          case '15:00:00':
+              return '3pm';
+          case '18:00:00':
+              return '6pm';
+          case '21:00:00':
+              return '9pm';
+          default:
+              return '12am';
+        }
+      }
 
     renderDate = (num) => {
         
@@ -101,24 +123,75 @@ class ForecastScreen extends Component {
                 day = "Today";
         }
 
+        return day;
+    }
+
+    renderHours = (item) => {
+        const details = `${item.wind.speed} m/s, ${item.main.pressure} hpa`;
         return (
-            <Text style={styles.textStyle}>{day}</Text>
+            <View style={styles.hoursBlock}>
+                <View style={styles.timeBlock}>
+                    <Text style={styles.textStyle}>{this.convert24To12(item.time)}</Text>
+                    <Image
+                            resizeMode="cover"
+                            style={styles.iconImage}
+                            source={{ uri: `${IMG_URL}${item.weather.icon}${IMG_EXT}`}}
+                        />
+                </View>
+                <View style={styles.hoursDetailBlock}>
+                    <View style={styles.timeBlock}>
+                        <Text style={styles.hoursTempText}>{item.main.temp}°</Text>
+                        <Text style={styles.hoursDescriptionText}>{item.weather.description}</Text>
+                    </View>
+                    <Text style={styles.hoursDetailsText}>{details}</Text>
+                </View>
+            </View>
         );
+    }
+
+    renderDayBlock = (list) => {
+        console.log(list);
+        return (
+            <Card
+                title={this.renderDay(list.id)}
+            >
+            
+                <FlatList
+                    data={list.list}
+                    keyExtractor={item => item.time}
+                    renderItem={({item}) => this.renderHours(item)}
+                />
+                
+            </Card>
+        );
+    }
+
+    renderDateRange = (list) => {
+       const listLen = list.length;
+       const startDate = list[0].date;
+       const endDate = list[listLen - 1].date;
+       const startDate_split = startDate.split("-");
+       const endDate_split = endDate.split("-");
+       const range = `${startDate_split[2]}/${startDate_split[1]} - ${endDate_split[2]}/${endDate_split[1]}`;
+       return(
+        <View style={styles.titleStyle}>
+        <Text style={styles.textStyle}>{listLen} Days Forecast</Text>
+        <Text>{range}</Text>
+        </View>
+       );
     }
 
     render() {
         const { params } = this.props.navigation.state;
         const { forecast } = params;
+        this.renderDateRange(forecast);
         return(
             <View style={styles.container}>
-                <View style={styles.titleStyle}>
-                <Text style={styles.textStyle}>5 Days Forecast</Text>
-                <Text>2/6 - 2/10</Text>
-                </View>
+                {this.renderDateRange(forecast)}
                 <FlatList
                     data={forecast}
                     keyExtractor={item => item.id}
-                    renderItem={item => this.renderBlock(item)}
+                    renderItem={({item}) => this.renderDayBlock(item)}
                 />
             <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
                 <TouchableOpacity
@@ -134,13 +207,17 @@ class ForecastScreen extends Component {
 
 const styles = {
     container: {
+        flex: 1,
         flexDirection: 'column',
         backgroundColor: 'white',
-        padding: 5
+        paddingBottom: 20
     },
     titleStyle: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 60,
+        elevation: 5,
+        backgroundColor: '#f8f8f8'
     },
     detailsTextStyle: {
         fontSize: 12,
@@ -157,7 +234,9 @@ const styles = {
     },
     textStyle: {
         fontSize: 16,
-        color: '#444444'
+        color: '#444444',
+        fontWeight: '300',
+        padding: 10
     },
     lineStyle: {
         height: 1,
@@ -185,6 +264,39 @@ const styles = {
         fontSize: 16,
         fontWeight: '500',
         color: '#666666'
+    },
+    dayBlock: {
+        backgroundColor: '#f8f8f8',
+        borderColor: '#ddd',
+        borderWidth: 0.5,
+    },
+    hoursBlock: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
+        padding: 10
+    },
+    timeBlock: {
+        flexDirection: 'row',
+    },
+    hoursDetailBlock:{
+        flexDirection: 'column',
+    },
+    hoursTempText: {
+        fontSize: 16,
+        color: '#444444',
+        fontWeight: '200'
+    },
+    hoursDescriptionText: {
+        fontSize: 16,
+        color: '#999',
+        fontStyle: 'italic',
+        marginLeft: 5
+    },
+    hoursDetailsText: {
+        fontSize :16,
+        color: '#444444',
+        fontWeight: '200'
     }
 }
 
