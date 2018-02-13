@@ -16,7 +16,7 @@ import Forecast from '../components/Forecast';
 import BottomTab from '../components/BottomTab';
 import Slides from '../components/Slides';
 import CustomScroll from '../components/CustomScroll';
-
+const THEME_COLOR = '#70BDC6';
 class HomeScreen extends Component {
     constructor(props){
         super(props);
@@ -30,7 +30,7 @@ class HomeScreen extends Component {
     };
     componentDidMount(){
         if (this.props.cities.length === 0){
-            this.props.navigation.navigate('location');
+            this.props.navigation.navigate('location',{theme: THEME_COLOR});
         } 
     }
 
@@ -49,6 +49,7 @@ class HomeScreen extends Component {
     }
    
     renderCity = (item) => {
+        console.log(item.item);
         if (item.item.id > 0 ){
             return(
                 <City 
@@ -57,18 +58,7 @@ class HomeScreen extends Component {
                     navigation={this.props.navigation}
                 />
             );
-        } /*else {
-            return (
-                <View style={styles.container}>
-                    <Text>Wait city is loading...........</Text>
-                    <Button 
-                        title="Refresh"
-                        onPress={() => this.componentDidMount()}
-                    /> 
-                </View>
-            );
-        }*/
-        
+        }
     }
     renderEmptyComponent = () => {
         return(
@@ -83,6 +73,7 @@ class HomeScreen extends Component {
                         pagingEnabled
                         data={this.props.data}
                         horizontal
+                        inverted={true}
                         alwaysBounceVertical={false}
                         showsHorizontalScrollIndicator={false}
                         ListEmptyComponent={this.renderEmptyComponent()}
@@ -99,9 +90,6 @@ class HomeScreen extends Component {
                    <CityList 
                         navigation={this.props.navigation}
                    />
-                    <BottomTab 
-                         add={ () => this.openCitiesScreen()}
-                    />
                 </View>
             );
         }

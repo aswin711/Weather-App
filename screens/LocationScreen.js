@@ -16,16 +16,18 @@ class LocationScreen extends Component {
         }
     }
 
-    static navigationOptions = {
-        title: 'Select Location',
-        headerStyle: {
-            backgroundColor: '#70BDC6'
-        },
-        headerTintColor: 'white',
-        headerTitleStyle: {
-            fontWeight: '100'
+    static navigationOptions = ({navigation}) => (
+        {
+            title: 'Select Location',
+            headerStyle: {
+                backgroundColor: navigation.state.params.theme
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+                fontWeight: '100'
+            }
         }
-    };
+    );
 
     clearText = (text) => {
         if(text.length === 0){

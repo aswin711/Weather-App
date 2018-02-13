@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ToastAndroid } from 'react-native';
+import { View, Text, FlatList, ToastAndroid, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import FAB from 'react-native-fab';
@@ -21,26 +21,23 @@ class CitiesScreen extends Component {
     static navigationOptions  = ({ navigation }) => ({
         title: 'Manage City',
         headerStyle: {
-            backgroundColor: THEME_COLOR
+            backgroundColor: navigation.state.params.theme[1]
         },
         headerTintColor: 'white',
         headerTitleStyle: {
             fontWeight: '100',
         },
         headerRight:(
-            <Button
-                transparent
-                icon={
+            <TouchableOpacity
+             onPress={() => navigation.navigate('edit')}
+             style={{ marginRight: 10}}
+            >
                     <Icon
                       name='md-create'
                       size={30}
                       color='white'
                     />
-                  }
-                title = "Edit"
-                color='white'
-                onPress={() => navigation.navigate('edit')}
-            />
+            </TouchableOpacity>       
         )
     });
 
@@ -48,9 +45,9 @@ class CitiesScreen extends Component {
         this.props.navigation.navigate('edit');
     }
 
-    openLocationScreen = () => {
+    openLocationScreen = (theme) => {
         if (this.props.cities.length <= 3){
-            this.props.navigation.navigate('location',{theme: THEME_COLOR});
+            this.props.navigation.navigate('location',{theme});
         } else {
             ToastAndroid.show("Unable to add more than 4 cities", ToastAndroid.SHORT);
         }
@@ -69,7 +66,7 @@ class CitiesScreen extends Component {
         }  
     }
     render(){
-        //console.log(this.props.cities);
+        const {theme} = this.props.navigation.state.params;
         return(
             <View style={styles.container}>
                 <FlatList
@@ -80,9 +77,9 @@ class CitiesScreen extends Component {
 
             <FAB 
             style={styles.fabButton}
-            buttonColor={THEME_COLOR}
+            buttonColor={theme[1]}
             iconTextColor="#FFFFFF" 
-            onClickAction={() => this.openLocationScreen()} 
+            onClickAction={() => this.openLocationScreen(theme[1])} 
             visible={true} 
            />
 

@@ -79,6 +79,7 @@ class Forecast extends Component {
             temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
     
             return(
+                <View style={{ flex: 1}}>
                 <View style={styles.rowStyle}>
                  <View style={[ styles.singleRow,{ alignItems: 'flex-start'} ] }>
                  {this.renderDay(data.id)}
@@ -97,6 +98,9 @@ class Forecast extends Component {
                     <Text style={styles.textStyle}>{(temp_min)}°/{(temp_max)}°</Text>
                     </View> 
                    </View>
+                   <View style={styles.rule} />
+                </View>
+               
             );
         } 
 
@@ -171,7 +175,7 @@ class Forecast extends Component {
                     onPress={() => this.openForeCastScreen(list)} 
                >
                 <View  style={styles.labelStyle}>
-                <Text style={styles.forecastLabel}>5 Days Forecast</Text>
+                <Text style={styles.forecastLabel}>{list.length} Days Forecast</Text>
                 </View>
                    
                </TouchableOpacity>
@@ -193,7 +197,7 @@ const styles = {
     },
     rowStyle: {
         flexDirection: 'row',
-        padding: 10,   
+        padding: 5,   
     },
     singleRow:{
         flex: 1,
@@ -228,8 +232,14 @@ const styles = {
     },
     forecastLabel: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '100',
         color: '#666666'
+    },
+    rule: {
+        borderBottomColor: '#999999',
+        borderBottomWidth: 1,
+        marginLeft: 10,
+        marginRight: 10
     }
 }
 

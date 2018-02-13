@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, View, RefreshControl, Dimensions, ToolbarAndroid, Animated } from 'react-native';
+import { 
+    ScrollView, 
+    Text, 
+    View, 
+    RefreshControl, 
+    Dimensions, 
+    ToolbarAndroid, 
+    Animated,
+    Image, 
+    TouchableOpacity} from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -8,9 +17,13 @@ import Details from './Details';
 import Forecast from './Forecast';
 import Graph from './Graph';
 import Label from './Label';
+import colors from '../utils/colors';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const THEME_COLOR = '#70BDC6';
+const IMG_URL = 'https://openweathermap.org/img/w/';
+const IMG_EXT = '.png';
 class City extends Component {
 
     constructor(props){
@@ -39,6 +52,31 @@ class City extends Component {
         });
     }
 
+    getCityIndex = (cityId) => {
+        let pos = 0;
+        this.props.cities.map((city,index) => {
+            if(city.id === cityId){
+                pos = index;
+            }
+        });
+
+        return pos;
+    }
+
+    getBanner = (id) => {
+        switch(this.getCityIndex(id)){
+            case 0:
+                return colors.moonPurple;
+            case 1:
+                return colors.shifter;
+            case 2:
+                return colors.quepal;
+            case 3:
+                return colors.orangeFun;
+            default:
+                return colors.moonPurple;
+        }
+    }
     
   convert24To12 = (time) => {
     switch(time){
@@ -90,7 +128,7 @@ class City extends Component {
         
         const headerHeight = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-            outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
+            outputRange: [0, HEADER_COLLAPSED_HEIGHT],
             extrapolate: 'clamp'
           });
           const headerTitleOpacity = this.state.scrollY.interpolate({
@@ -99,34 +137,41 @@ class City extends Component {
             extrapolate: 'clamp'
           });
           const heroTitleOpacity = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+            inputRange: [0, HEADER_EXPANDED_HEIGHT],
             outputRange: [1, 0],
             extrapolate: 'clamp'
           });
 
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
+        const headerText = `${name} ${main.temp}°`;
         if (list !== 'undefined') {
             return(
     
                 <View style={styles.container}>
-                    <Animated.View style={{ height: headerHeight, width: SCREEN_WIDTH,
-                        backgroundColor: THEME_COLOR
-                        }} >
-                        <Animated.View
-                            style={{ opacity: heroTitleOpacity}}
-                        >
-                        <Label 
-                            city={ name }
-                            temp={ main.temp }
-                            status={ weather[0] }
-                        />
-
-                        </Animated.View>
-                        <Animated.View
-                            style={{ height: HEADER_COLLAPSED_HEIGHT, opacity: headerTitleOpacity}}
-                        />
+                  
+                    <Animated.View
+                        style={[ styles.headerStyle , { height: headerHeight, opacity: headerTitleOpacity}]}
+                    >
+                        <View style={{ flex: 1}} />
+                        <View style={styles.headerView}>
+                            <Image
+                              style={styles.iconImage}
+                              source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}} 
+                            />
+                            <Text style={styles.headerText}>{headerText}</Text>
+                        </View>
+                        <View style={styles.menuView}>
+                            <TouchableOpacity>
+                                <Icon
+                                    name="md-add"
+                                    size={30}
+                                    color="#666"
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </Animated.View>
+                
                     <ScrollView
                      horizontal={false}
                      refreshControl={
@@ -143,6 +188,13 @@ class City extends Component {
                      )}
                      scrollEventThrottle={16}
                     >
+                     <Label 
+                            theme={this.getBanner(this.props.data.id)}
+                            city={ name }
+                            temp={ main.temp }
+                            status={ weather[0] }
+                            navigation={ this.props.navigation }
+                        />
                         <Forecast 
                             data={ list }
                             currentTemp={ main.temp }
@@ -184,9 +236,39 @@ const styles = {
         width: SCREEN_WIDTH,
     },
     headerStyle: {
-        backgroundColor: THEME_COLOR
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5
+    },
+    iconImage: {
+        width: 30,
+        height: 30,
+    },
+    headerView: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    headerText: {
+        marginLeft: 5,
+        fontSize: 16,
+        color: '#444',
+        justifyContent: 'center',
+        fontWeight: '300'
+    },
+    menuView: {
+        flex: 1,
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        marginRight: 10
     }
 }
 
+function mapStateToProps(state){
+    return {cities: state.city};
+}
 
-export default connect(null,actions)(City);
+export default connect(mapStateToProps,actions)(City);
