@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import colors from '../utils/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import Graph from './Graph';
+
 const IMG_URL = 'https://openweathermap.org/img/w/';
 const IMG_EXT = '.png';
 class Label extends Component {
@@ -16,6 +18,7 @@ class Label extends Component {
         return(
             <LinearGradient colors={theme}>
                 <View style={styles.container}>
+                <View style={styles.topContainer}>
                 <View style={styles.detailsStyle}>
                     <Text style={styles.smallTextStyle}>{ city }</Text>
                     <Text style={styles.largeTextStyle}>{ temp }°</Text>
@@ -36,6 +39,14 @@ class Label extends Component {
                         />
                     </TouchableOpacity>
                 </View>
+                </View>
+                <View style={styles.bottomContainer}>
+                    <Graph
+                        style={styles.graphView}
+                        data={this.props.plotPoints}
+                    />
+                </View>
+                
                 </View>   
             </LinearGradient> 
         );
@@ -44,9 +55,19 @@ class Label extends Component {
 
 const styles = {
     container: {
-        height: 310,
+        height: 360,
+        flexDirection: 'column',
+    },
+    topContainer:{
+        flex: 0.6,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+ 
+    },
+    bottomContainer:{
+        flex: 0.4,
+        flexDirection: 'column',
+        bottom: 0
     },
     imageStyle: {
         position: 'absolute',
@@ -85,6 +106,9 @@ const styles = {
         marginTop: 20,
         marginRight: 20
     },
+    graphView: {
+       justifyContent: 'flex-end'
+    }
     
 }
 

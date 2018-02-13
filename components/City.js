@@ -119,12 +119,14 @@ class City extends Component {
             plot.push({x: this.convert24To12(xlabel),y: y_label});
         });
 
-        return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]} };
+        const scale = parseInt( (high - low ) / 4 );
+
+        return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]}, scale };
     }
 
     renderContainer() {
         const HEADER_COLLAPSED_HEIGHT = 60;
-        const HEADER_EXPANDED_HEIGHT = 300;
+        const HEADER_EXPANDED_HEIGHT = 350;
         
         const headerHeight = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
@@ -153,7 +155,6 @@ class City extends Component {
                     <Animated.View
                         style={[ styles.headerStyle , { height: headerHeight, opacity: headerTitleOpacity}]}
                     >
-                        <View style={{ flex: 1}} />
                         <View style={styles.headerView}>
                             <Image
                               style={styles.iconImage}
@@ -161,15 +162,7 @@ class City extends Component {
                             />
                             <Text style={styles.headerText}>{headerText}</Text>
                         </View>
-                        <View style={styles.menuView}>
-                            <TouchableOpacity>
-                                <Icon
-                                    name="md-add"
-                                    size={30}
-                                    color="#666"
-                                />
-                            </TouchableOpacity>
-                        </View>
+                    
                     </Animated.View>
                 
                     <ScrollView
@@ -189,21 +182,19 @@ class City extends Component {
                      scrollEventThrottle={16}
                     >
                      <Label 
+                            height={HEADER_EXPANDED_HEIGHT}
                             theme={this.getBanner(this.props.data.id)}
                             city={ name }
-                            temp={ main.temp }
+                            temp={ parseInt(main.temp) }
                             status={ weather[0] }
                             navigation={ this.props.navigation }
+                            plotPoints={this.getPlotPoints()}
                         />
                         <Forecast 
                             data={ list }
                             currentTemp={ main.temp }
                             forecast={ this.props.forecast }
                             navigation={ this.props.navigation }
-                        />
-                        <Graph 
-                            title="24 Hours Forecast"
-                            data={this.getPlotPoints()}
                         />
                         <Details 
                             wind={ wind }
@@ -247,7 +238,6 @@ const styles = {
         height: 30,
     },
     headerView: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'

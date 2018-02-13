@@ -16,37 +16,56 @@ class Graph extends Component {
 
 
     render() {
-        const { plot, domain, range } = this.props.data;
+        const { plot, domain, range, scale,style } = this.props.data;
         console.log(plot);
         return (
             <View 
                 pointerEvents="none"
-                style={ styles.container}
+                style={styles.container}
             >
-                <Text style={styles.label}>{ this.props.title }</Text>
                 <VictoryChart
-                  height={300}
+                  height={120}
+                  padding={10}
+                  domainPadding={{ x: [5, 5], y: [15,15]}}
+
                 >
-                    <VictoryAxis />
+                 <VictoryAxis
+                    style={{
+                      axis: { stroke: 'transparent'},
+                      axisLabel: { fontSize: 12, fill: '#ffffff'}
+                    }}
+                 />
                     <VictoryAxis
                       dependentAxis
                       domain={domain}
+                      style={{
+                        axis: { stroke: 'transparent'}
+                      }}
                     />
                     <VictoryGroup
                         data={plot}
                     >
+                   
                     <VictoryLine
                         interpolation='natural'
                         range={range}
+                        scale={{ x: 'linear', y: 'sqrt'}} 
                          style={{
-                            data: { stroke: "#c43a31" , strokeWidth: 3, strokeLineCap: 'round' },
+                            data: { stroke: "white" , strokeWidth: 3, opacity: 1 },
+                            labels: { fill: "white"}
                         }}
                         labels={(datum) => `${datum.y}°`}
-                        labelComponent={<VictoryLabel renderInPortal dy={-5} dx={6}/>}
+                        labelComponent={<VictoryLabel renderInPortal dy={-1} />}
                     />
                     <VictoryScatter
                         data={plot}
+                        scale={{ x: 'linear', y: 'sqrt'}} 
                         size={5}
+                        style={{
+                          data: {fill: "white", opacity: 0.8},
+                          labels: {fontSize: 12},
+                          parent: {border: "1px solid #ccc"}
+                        }}
                     />
                     </VictoryGroup>
                 </VictoryChart>
@@ -59,14 +78,17 @@ class Graph extends Component {
 const styles = {
     container: {
         flex: 1,
-        backgroundColor: 'white',
-        padding: 5,
-        marginTop: 10
+        backgroundColor: 'rgba(0,0,0,0)',
     },
     label: {
         fontSize: 14,
         color: '#444444',
         fontWeight: '500'
+    },
+    chart: {
+      height: 0,
+      width: 0,
+      backgroundColor: 'rgba(0,0,0,0)'
     }
 }
 
