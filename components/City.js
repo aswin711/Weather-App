@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, View, RefreshControl, Dimensions, ToolbarAndroid } from 'react-native';
+import { ScrollView, Text, View, RefreshControl, Dimensions, ToolbarAndroid, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import {
-AppBarLayout,
-CoordinatorLayout,
-CollapsingToolbarLayout,
-CollapsingParallax
-} from 'react-native-collapsing-toolbar';
-import NestedScrollView from 'react-native-nested-scroll-view';
 
 import * as actions from '../actions';
 import Details from './Details';
@@ -17,19 +10,19 @@ import Graph from './Graph';
 import Label from './Label';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-
+const THEME_COLOR = '#70BDC6';
 class City extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            refreshing: false
+            refreshing: false,
+            scrollY: new Animated.Value(0)
         };
     }
     
     fetchCity(){
-       // this.props.getWeatherByCityId(this.props.data.id);
-       // this.props.getForecastByCityId(this.props.data.id);
+    
        this.props.fetchData(this.props.data.id);
     }
 
@@ -92,14 +85,48 @@ class City extends Component {
     }
 
     renderContainer() {
-        const HEADER_HEIGHT = 300;
+        const HEADER_COLLAPSED_HEIGHT = 60;
+        const HEADER_EXPANDED_HEIGHT = 300;
+        
+        const headerHeight = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+            outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
+            extrapolate: 'clamp'
+          });
+          const headerTitleOpacity = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+            outputRange: [0, 1],
+            extrapolate: 'clamp'
+          });
+          const heroTitleOpacity = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+            outputRange: [1, 0],
+            extrapolate: 'clamp'
+          });
+
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
         if (list !== 'undefined') {
             return(
     
                 <View style={styles.container}>
+                    <Animated.View style={{ height: headerHeight, width: SCREEN_WIDTH,
+                        backgroundColor: THEME_COLOR
+                        }} >
+                        <Animated.View
+                            style={{ opacity: heroTitleOpacity}}
+                        >
+                        <Label 
+                            city={ name }
+                            temp={ main.temp }
+                            status={ weather[0] }
+                        />
 
+                        </Animated.View>
+                        <Animated.View
+                            style={{ height: HEADER_COLLAPSED_HEIGHT, opacity: headerTitleOpacity}}
+                        />
+                    </Animated.View>
                     <ScrollView
                      horizontal={false}
                      refreshControl={
@@ -108,13 +135,14 @@ class City extends Component {
                         onRefresh={this.onRefresh.bind(this)}
                         />
                         
-                    }>
-
-                        <Label 
-                            city={ name }
-                            temp={ main.temp }
-                            status={ weather[0] }
-                        />
+                    }
+                     onScroll={Animated.event(
+                         [{ nativeEvent: {
+                             contentOffset: { y: this.state.scrollY },
+                         }}]
+                     )}
+                     scrollEventThrottle={16}
+                    >
                         <Forecast 
                             data={ list }
                             currentTemp={ main.temp }
@@ -155,6 +183,9 @@ const styles = {
        flex: 1,
         width: SCREEN_WIDTH,
     },
+    headerStyle: {
+        backgroundColor: THEME_COLOR
+    }
 }
 
 
