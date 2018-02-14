@@ -7,6 +7,8 @@ import { Button } from 'react-native-elements';
 import * as actions from '../actions';
 import ListCity from '../components/ListCity';
 
+import colors from '../utils/colors';
+
 const THEME_COLOR = '#70BDC6';
 
 class CitiesScreen extends Component {
@@ -21,7 +23,7 @@ class CitiesScreen extends Component {
     static navigationOptions  = ({ navigation }) => ({
         title: 'Manage City',
         headerStyle: {
-            backgroundColor: navigation.state.params.theme[1]
+            backgroundColor: navigation.state.params.theme[0]
         },
         headerTintColor: 'white',
         headerTitleStyle: {
@@ -41,6 +43,31 @@ class CitiesScreen extends Component {
         )
     });
 
+    getCityIndex = (cityId) => {
+        let pos = 0;
+        this.props.data.map((city,index) => {
+            if(city.id === cityId){
+                pos = index;
+            }
+        });
+        return pos;
+    }
+
+    getBanner = (id) => {
+        switch(this.getCityIndex(id)){
+            case 0:
+                return colors.moonPurple;
+            case 1:
+                return colors.shifter;
+            case 2:
+                return colors.quepal;
+            case 3:
+                return colors.orangeFun;
+            default:
+                return colors.moonPurple;
+        }
+    }
+
     navigateToEdit = () => {
         this.props.navigation.navigate('edit');
     }
@@ -55,7 +82,7 @@ class CitiesScreen extends Component {
     }
 
     renderCity = (item) => {
-        const {theme} = this.props.navigation.state.params;
+        const theme = this.getBanner(item.id);
         if( item.id > 0) {
             return (
                 <ListCity
@@ -69,6 +96,7 @@ class CitiesScreen extends Component {
     }
     render(){
         const {theme} = this.props.navigation.state.params;
+        console.log(this.props.data);
         return(
             <View style={styles.container}>
                 <FlatList
@@ -79,7 +107,7 @@ class CitiesScreen extends Component {
 
             <FAB 
             style={styles.fabButton}
-            buttonColor={theme[1]}
+            buttonColor={theme[0]}
             iconTextColor="#FFFFFF" 
             onClickAction={() => this.openLocationScreen(theme[1])} 
             visible={true} 
@@ -95,7 +123,7 @@ const styles = {
     container: {
         flex: 1,
         flexDirection: 'column',
-    
+        backgroundColor: 'white'
     },
     fabButton: {
         height: 60,

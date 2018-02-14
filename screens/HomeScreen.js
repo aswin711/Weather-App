@@ -28,10 +28,13 @@ class HomeScreen extends Component {
     static navigationOptions = {
         header: null
     };
+   
     componentDidMount(){
         if (this.props.cities.length === 0){
             this.props.navigation.navigate('location',{theme: THEME_COLOR});
-        } 
+        } else {
+            this.props.addPendingData([]);
+        }
     }
 
      fetchData(){
@@ -49,7 +52,6 @@ class HomeScreen extends Component {
     }
    
     renderCity = (item) => {
-        console.log(item.item);
         if (item.item.id > 0 ){
             return(
                 <City 
@@ -73,7 +75,6 @@ class HomeScreen extends Component {
                         pagingEnabled
                         data={this.props.data}
                         horizontal
-                        inverted={true}
                         alwaysBounceVertical={false}
                         showsHorizontalScrollIndicator={false}
                         ListEmptyComponent={this.renderEmptyComponent()}

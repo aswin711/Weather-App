@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, FlatList, Text, Image } from 'react-native';
 import { Card } from 'react-native-elements';
+import LinearGradient from 'react-native-linear-gradient';
 import _ from 'lodash';
 import { code } from '../utils/country_code';
 
@@ -9,11 +10,11 @@ const IMG_EXT = '.png';
 class ListCity extends Component {
 
 
+   
     getCountry = (country_code) => {
         let countryName = "";
         code.map(country => {
             if (country.code === country_code){
-                console.log(country);
                 countryName = country.name;
             }
         });
@@ -51,49 +52,7 @@ class ListCity extends Component {
         }
     }
 
-    renderCity = () => {
-        const { theme } = this.props;
-        const { main, name, sys, weather, wind } = this.props.data;
-        const country = this.getCountry(sys.country);
-        const temp = parseInt(main.temp);
-        return (
-            <View style={styles.card}>
-                <View style={styles.cityStyle}>
-                    <Text style={[styles.countryNameStyle,{ color: theme }]}>{name}</Text>
-                    <View style={styles.cityTempStyle}>
-                        <Image 
-                            style={styles.iconStyle}
-                            source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}}
-                        />
-                        <Text style={styles.tempStyle}>{temp}°</Text>
-                    </View>
-                </View>
-                    <View style={[styles.cityDescriptionStyle, {backgroundColor: theme}]}>
-                        <View style={styles.cityTempStyle}>
-                            <Image 
-                                style={styles.smallIcon}
-                                source={require('../utils/img/ic_wind.png')}
-                            />
-                            <Text style={styles.detailsText} >{wind.speed} m/s {this.getWindDirection(wind.deg)}</Text>
-                        </View>
-                        <View style={styles.cityTempStyle}>
-                            <Image 
-                                    style={styles.smallIcon}
-                                    source={require('../utils/img/ic_wind.png')}
-                            />
-                            <Text style={styles.detailsText} >{wind.speed} m/s {this.getWindDirection(wind.deg)}</Text>
-                        </View>
-                        <View style={styles.cityTempStyle}>
-                            <Image 
-                                    style={styles.smallIcon}
-                                    source={require('../utils/img/ic_wind.png')}
-                            />
-                            <Text style={styles.detailsText} >{wind.speed} m/s {this.getWindDirection(wind.deg)}</Text>
-                        </View>
-                    </View>
-            </View>
-        );
-    }
+   
 
     render() {
         const { cityDetailsStyle,
@@ -107,11 +66,10 @@ class ListCity extends Component {
             humidityInfoStyle,
             tempRangeStyle   } = styles;
 
-            const { theme } = this.props;
+        const { theme } = this.props;
         const { main, name, sys, weather, wind } = this.props.data;
         const country = this.getCountry(sys.country);
         const temp = parseInt(main.temp);
-        console.log(country);
 
         return(
             <View style={styles.card}>
@@ -124,30 +82,31 @@ class ListCity extends Component {
                         />
                         <Text style={styles.tempStyle}>{temp}°</Text>
                     </View>
+                    <Text style={styles.descriptionText}>{weather[0].description}</Text>
                 </View>
-                    <View style={[styles.cityDescriptionStyle, {backgroundColor: theme[0]}]}>
+                    <LinearGradient colors={theme} style={styles.cityDescriptionStyle}>
                         <View style={styles.cityTempStyle}>
                             <Image 
                                 style={styles.smallIcon}
-                                source={require('../utils/img/ic_wind.png')}
+                                source={require('../utils/img/ic_wind_white.png')}
                             />
                             <Text style={styles.detailsText} >{wind.speed} m/s</Text>
                         </View>
                         <View style={styles.cityTempStyle}>
                             <Image 
                                     style={styles.smallIcon}
-                                    source={require('../utils/img/ic_pressure.png')}
+                                    source={require('../utils/img/ic_pressure_white.png')}
                             />
                             <Text style={styles.detailsText} >{parseInt(main.pressure)} hPa</Text>
                         </View>
                         <View style={styles.cityTempStyle}>
                             <Image 
                                     style={styles.smallIcon}
-                                    source={require('../utils/img/ic_humidity.png')}
+                                    source={require('../utils/img/ic_humidity_white.png')}
                             />
                             <Text style={styles.detailsText} >{main.humidity}%</Text>
                         </View>
-                    </View>
+                    </LinearGradient>
             </View>
         );
     }
@@ -161,7 +120,7 @@ const styles = {
         elevation: 5,
         backgroundColor: 'white',
         height: 180,
-        margin: 25
+        margin: 20
     },
     cityStyle: {
         flexDirection: 'column',
@@ -176,14 +135,17 @@ const styles = {
     },
     cityTempStyle: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: 15,
     },
     cityNameStyle: {
         fontSize: 25,
-        color: '#222222'
+        color: '#222222',
     },
     countryNameStyle: {
-        fontSize: 16,
+        fontSize: 20,
+        marginLeft: 10
     },
     tempStyle: {
         fontSize: 35,
@@ -220,6 +182,14 @@ const styles = {
     smallIcon: {
         height: 35,
         width: 35
+    },
+    descriptionText: {
+        fontSize: 16,
+        fontWeight: '100',
+        color: '#666666',
+        fontStyle: 'italic',
+        marginTop: 5,
+        marginLeft: 10
     }
 };
 

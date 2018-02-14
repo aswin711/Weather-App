@@ -18,7 +18,6 @@ class Forecast extends Component {
     getForecastReport = (forecast) => {
         let report = [];
         let count = 0;
-        console.log(forecast.length);
         forecast.map((data,index_out) => {
 
             let dateTime = data.dt_txt;
@@ -61,7 +60,6 @@ class Forecast extends Component {
         if (data.id >= 0) {
             let temp_min = data.list[0].main.temp_min;
             let temp_max = data.list[0].main.temp_max;
-            console.log(data);
     
             for ( let i = 0; i < data.list.length; i++ ){
                 const slice = data.list[i];
@@ -162,7 +160,6 @@ class Forecast extends Component {
     }
 
     render() {
-        console.log(this.props.data);
         const list = this.getForecastReport(this.props.data);
         return(
             <View style={styles.container}>

@@ -55,12 +55,11 @@ class City extends Component {
 
     getCityIndex = (cityId) => {
         let pos = 0;
-        this.props.cities.map((city,index) => {
+        this.props.home.map((city,index) => {
             if(city.id === cityId){
                 pos = index;
             }
         });
-
         return pos;
     }
 
@@ -150,6 +149,7 @@ class City extends Component {
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
         const headerText = `${name} ${parseInt(main.temp)}°`;
+       
         if (list !== 'undefined') {
             return(
     
@@ -262,7 +262,7 @@ const styles = {
 }
 
 function mapStateToProps(state){
-    return {cities: state.city};
+    return {home: state.home};
 }
 
 export default connect(mapStateToProps,actions)(City);

@@ -97,7 +97,8 @@ const styles = {
         flexDirection: 'column',
         backgroundColor: 'white',
         padding: 5,
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: 10
     },
     innerContainerStyle: {
         flexDirection: 'column',
@@ -114,7 +115,7 @@ const styles = {
         flex: 0.5
     },
     singlePropertyViewStyle: {
-        flexDirection: 'column',
+        flexDirection: 'row',
         flex: 1,
         alignItems:'center',
         justifyContent: 'center',
@@ -126,12 +127,17 @@ const styles = {
         fontWeight: '200'
     },
     propertyValueStyle: {
-        marginTop: 10
+        marginTop: 10,
+        marginLeft: 5,
+        fontSize: 15,
+        color: '#222222',
+        fontWeight: '200',
+        justifyContent: 'center'
     },
     label: {
         fontSize: 14,
         color: '#444444',
-        fontWeight: '500'
+        fontWeight: '100'
     },
     imageIcon: {
         width: 35,
