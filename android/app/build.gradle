@@ -94,12 +94,12 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.weather"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         ndk {
@@ -138,14 +138,12 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-svg')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.facebook.react:react-native:+'
     compile project(':react-native-vector-icons')
-    compile project(':react-native-collapsing-toolbar')
-    compile project(':react-native-nested-scroll-view')
     compile project(':react-native-linear-gradient')
+    compile project(':react-native-svg')
     // From node_modules
 }
 

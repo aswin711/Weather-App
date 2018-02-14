@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text } from 'react-native';
+import {View, Text, FlatList, Image } from 'react-native';
 import _ from 'lodash';
 import { 
     VictoryBar,
@@ -9,37 +9,57 @@ import {
     VictoryLabel,
     VictoryAxis,
     VictoryGroup,
-    VictoryScatter } from 'victory-native';
-
+    VictoryScatter, 
+    VictoryZoomContainer} from 'victory-native';
+const IMG_URL = 'https://openweathermap.org/img/w/';
+const IMG_EXT = '.png';
 class Graph extends Component {
 
 
+  renderWeatherBlock = (block) => {
+    return (
+      <View style={styles.blockStyle}>
+       <Image
+          style={styles.iconImage}
+          source={{ uri: `${IMG_URL}${block.icon}${IMG_EXT}`}}
+        />
+        <Text style={styles.blockText}>{block.x}</Text>
+      </View>
+    );
+  }
+
+  getBlockData = (weather,plot) => {
+    let block = [];
+    for (let i = 0; i < plot.length; i++){
+      block.push({id: i, icon: weather[i].icon, x: plot[i].x });
+    }
+
+    return block;
+  }
+
 
     render() {
-        const { plot, domain, range, scale,style } = this.props.data;
-        console.log(plot);
+        const { weather,plot, domain, range, scale,style } = this.props.data;
+        const block = this.getBlockData(weather,plot);
         return (
             <View 
                 pointerEvents="none"
                 style={styles.container}
             >
-                <VictoryChart
+            <View style={styles.topContainer}>
+            <VictoryChart
                   height={120}
                   padding={10}
                   domainPadding={{ x: [5, 5], y: [15,15]}}
-
+                 
                 >
-                 <VictoryAxis
-                    style={{
-                      axis: { stroke: 'transparent'},
-                      axisLabel: { fontSize: 12, fill: '#ffffff'}
-                    }}
-                 />
+                
                     <VictoryAxis
                       dependentAxis
                       domain={domain}
                       style={{
-                        axis: { stroke: 'transparent'}
+                        axis: { stroke: 'transparent'},
+                        axisLabel: { fontSize: 10, fill:'#FFFFFF'}
                       }}
                     />
                     <VictoryGroup
@@ -47,11 +67,12 @@ class Graph extends Component {
                     >
                    
                     <VictoryLine
+                      
                         interpolation='natural'
                         range={range}
-                        scale={{ x: 'linear', y: 'sqrt'}} 
+                        scale={{ x: 'linear', y: 'linear'}} 
                          style={{
-                            data: { stroke: "white" , strokeWidth: 3, opacity: 1 },
+                            data: { stroke: "white" , strokeWidth: 2 },
                             labels: { fill: "white"}
                         }}
                         labels={(datum) => `${datum.y}°`}
@@ -60,15 +81,26 @@ class Graph extends Component {
                     <VictoryScatter
                         data={plot}
                         scale={{ x: 'linear', y: 'sqrt'}} 
-                        size={5}
+                        size={3}
                         style={{
-                          data: {fill: "white", opacity: 0.8},
+                          data: {fill: "white"},
                           labels: {fontSize: 12},
                           parent: {border: "1px solid #ccc"}
                         }}
                     />
                     </VictoryGroup>
                 </VictoryChart>
+
+            </View>
+          
+                  <FlatList
+                    style={styles.bottomContainer}
+                    data={block}
+                    horizontal={true}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => this.renderWeatherBlock(item)}
+                  />
+        
             </View>
         )
     }
@@ -77,8 +109,18 @@ class Graph extends Component {
 
 const styles = {
     container: {
-        flex: 1,
+      flex: 1,
+      flexDirection:'column',
         backgroundColor: 'rgba(0,0,0,0)',
+    },
+    topContainer: {
+      flex: 0.5,
+      flexDirection: 'row',
+      justifyContent: 'flex-end'
+    },
+    bottomContainer:{
+      flex: 0.5,
+      flexDirection: 'row',
     },
     label: {
         fontSize: 14,
@@ -89,6 +131,20 @@ const styles = {
       height: 0,
       width: 0,
       backgroundColor: 'rgba(0,0,0,0)'
+    },
+    blockStyle: {
+      flexDirection: 'column',
+      marginLeft: '4%',
+      marginRight: '4%',
+      alignItems: 'center'
+    },
+    blockText: {
+      fontSize: 12,
+      color: 'white',
+    },
+    iconImage: {
+      height: 30,
+      width: 30,
     }
 }
 

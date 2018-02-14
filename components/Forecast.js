@@ -58,7 +58,7 @@ class Forecast extends Component {
 
         let condition = [];
         let data = item.item;
-        if (data.id < 3) {
+        if (data.id >= 0) {
             let temp_min = data.list[0].main.temp_min;
             let temp_max = data.list[0].main.temp_max;
             console.log(data);
@@ -75,8 +75,10 @@ class Forecast extends Component {
             }
     
             
-            temp_min = Math.round((temp_min + 0.00001) * 100 ) / 100 ;
-            temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
+            //temp_min = Math.round((temp_min + 0.00001) * 100 ) / 100 ;
+            //temp_max = Math.round((temp_max + 0.00001) * 100 ) / 100 ;
+            temp_min = parseInt(temp_min);
+            temp_max = parseInt(temp_max);
     
             return(
                 <View style={{ flex: 1}}>
@@ -231,13 +233,13 @@ const styles = {
         alignItems: 'center'
     },
     forecastLabel: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '100',
-        color: '#666666'
+        color: '#444444'
     },
     rule: {
         borderBottomColor: '#999999',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.6,
         marginLeft: 10,
         marginRight: 10
     }

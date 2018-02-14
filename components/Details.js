@@ -37,8 +37,12 @@ class Details extends Component {
     renderPressure = (pressure) => {
         return (
             <View style={styles.singlePropertyViewStyle}>
-                <Text style={styles.propertyNameStyle}>PRESSURE</Text>
-                <Text style={styles.propertyValueStyle}>{pressure} hPa</Text>
+                <Image 
+                    style={styles.imageIcon}
+                    source={ require('../utils/img/ic_pressure.png')}
+                    resizeMode="cover"
+                />
+                <Text style={styles.propertyValueStyle}>{parseInt(pressure)} hPa</Text>
             </View>
     );
     }
@@ -47,7 +51,11 @@ class Details extends Component {
         const text = `${wind.speed}m/s ${this.getWindDirection(parseInt(wind.deg))}`;
         return (
             <View style={styles.singlePropertyViewStyle}>
-                <Text style={styles.propertyNameStyle}>WIND</Text>
+                 <Image 
+                    style={styles.imageIcon}
+                    source={ require('../utils/img/ic_wind.png')}
+                    resizeMode="cover"
+                />
                 <Text style={styles.propertyValueStyle}>{text}</Text>
             </View>
         );
@@ -56,7 +64,11 @@ class Details extends Component {
     renderHumidity = (humidity) => {
         return (
             <View style={styles.singlePropertyViewStyle}>
-                <Text style={styles.propertyNameStyle}>HUMIDITY</Text>
+                 <Image 
+                    style={styles.imageIcon}
+                    source={ require('../utils/img/ic_humidity.png')}
+                    resizeMode="cover"
+                />
                 <Text style={styles.propertyValueStyle}>{humidity}%</Text>
             </View>
         );
@@ -106,22 +118,24 @@ const styles = {
         flex: 1,
         alignItems:'center',
         justifyContent: 'center',
-        borderWidth: 0.5,
-        padding: 5,
-        borderColor: '#999999'
+    
     },
     propertyNameStyle: {
-        fontSize: 12,
-        color: '#a1a1a1'
+        fontSize: 14,
+        color: '#444444',
+        fontWeight: '200'
     },
     propertyValueStyle: {
-        fontSize: 13,
-        color: '#222222'
+        marginTop: 10
     },
     label: {
         fontSize: 14,
         color: '#444444',
         fontWeight: '500'
+    },
+    imageIcon: {
+        width: 35,
+        height: 35
     }
 }
 export default Details;

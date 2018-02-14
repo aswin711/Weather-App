@@ -11,6 +11,7 @@ import {
     TouchableOpacity} from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import LinearGradient from 'react-native-linear-gradient';
 
 import * as actions from '../actions';
 import Details from './Details';
@@ -103,6 +104,7 @@ class City extends Component {
 
     getPlotPoints = () => {
         let plot = [];
+        let weather = [];
         let list = this.props.data.forecast.list.slice(0,8);
         let low = 0;
         let high = 0;
@@ -117,11 +119,12 @@ class City extends Component {
               high = y_label;
             }
             plot.push({x: this.convert24To12(xlabel),y: y_label});
+            weather.push(value.weather[0]);
         });
 
         const scale = parseInt( (high - low ) / 4 );
 
-        return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]}, scale };
+        return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]}, scale, weather };
     }
 
     renderContainer() {
@@ -146,7 +149,7 @@ class City extends Component {
 
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
-        const headerText = `${name} ${main.temp}°`;
+        const headerText = `${name} ${parseInt(main.temp)}°`;
         if (list !== 'undefined') {
             return(
     
@@ -155,13 +158,13 @@ class City extends Component {
                     <Animated.View
                         style={[ styles.headerStyle , { height: headerHeight, opacity: headerTitleOpacity}]}
                     >
-                        <View style={styles.headerView}>
-                            <Image
-                              style={styles.iconImage}
-                              source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}} 
-                            />
-                            <Text style={styles.headerText}>{headerText}</Text>
-                        </View>
+                            <View  style={styles.headerView}>
+                                <Image
+                                style={styles.iconImage}
+                                source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}} 
+                                />
+                                <Text style={styles.headerText}>{headerText}</Text>
+                            </View>
                     
                     </Animated.View>
                 
@@ -228,7 +231,7 @@ const styles = {
     },
     headerStyle: {
         flexDirection: 'row',
-        backgroundColor: 'white',
+        backgroundColor: '#f5f7fa',
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5
@@ -240,7 +243,8 @@ const styles = {
     headerView: {
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0)'
     },
     headerText: {
         marginLeft: 5,

@@ -55,10 +55,12 @@ class CitiesScreen extends Component {
     }
 
     renderCity = (item) => {
+        const {theme} = this.props.navigation.state.params;
         if( item.id > 0) {
             return (
                 <ListCity
                     data={item.weather}
+                    theme={theme}
                 />
             );
         } else {

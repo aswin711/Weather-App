@@ -51,6 +51,50 @@ class ListCity extends Component {
         }
     }
 
+    renderCity = () => {
+        const { theme } = this.props;
+        const { main, name, sys, weather, wind } = this.props.data;
+        const country = this.getCountry(sys.country);
+        const temp = parseInt(main.temp);
+        return (
+            <View style={styles.card}>
+                <View style={styles.cityStyle}>
+                    <Text style={[styles.countryNameStyle,{ color: theme }]}>{name}</Text>
+                    <View style={styles.cityTempStyle}>
+                        <Image 
+                            style={styles.iconStyle}
+                            source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}}
+                        />
+                        <Text style={styles.tempStyle}>{temp}°</Text>
+                    </View>
+                </View>
+                    <View style={[styles.cityDescriptionStyle, {backgroundColor: theme}]}>
+                        <View style={styles.cityTempStyle}>
+                            <Image 
+                                style={styles.smallIcon}
+                                source={require('../utils/img/ic_wind.png')}
+                            />
+                            <Text style={styles.detailsText} >{wind.speed} m/s {this.getWindDirection(wind.deg)}</Text>
+                        </View>
+                        <View style={styles.cityTempStyle}>
+                            <Image 
+                                    style={styles.smallIcon}
+                                    source={require('../utils/img/ic_wind.png')}
+                            />
+                            <Text style={styles.detailsText} >{wind.speed} m/s {this.getWindDirection(wind.deg)}</Text>
+                        </View>
+                        <View style={styles.cityTempStyle}>
+                            <Image 
+                                    style={styles.smallIcon}
+                                    source={require('../utils/img/ic_wind.png')}
+                            />
+                            <Text style={styles.detailsText} >{wind.speed} m/s {this.getWindDirection(wind.deg)}</Text>
+                        </View>
+                    </View>
+            </View>
+        );
+    }
+
     render() {
         const { cityDetailsStyle,
             cityDescriptionStyle,
@@ -63,53 +107,75 @@ class ListCity extends Component {
             humidityInfoStyle,
             tempRangeStyle   } = styles;
 
+            const { theme } = this.props;
         const { main, name, sys, weather, wind } = this.props.data;
         const country = this.getCountry(sys.country);
         const temp = parseInt(main.temp);
         console.log(country);
 
         return(
-           <Card>
-               <View style={{ flex: 1, flexDirection: 'column'}}>
-               <View style={cityDetailsStyle}>
-                    <View style={cityDescriptionStyle}>
-                        <Text style={cityNameStyle}>{name}</Text>
-                        <Text style={countryNameStyle}>{country}</Text>
-                    </View>
-                    <View style={cityTempStyle}>
-                        <Image
-                        style={styles.iconStyle}
-                        source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}}
+            <View style={styles.card}>
+                <View style={styles.cityStyle}>
+                    <Text style={[styles.countryNameStyle,{ color: theme[0] }]}>{name}</Text>
+                    <View style={styles.cityTempStyle}>
+                        <Image 
+                            style={styles.iconStyle}
+                            source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}}
                         />
-                        <Text style={tempStyle}>{temp}°</Text>
+                        <Text style={styles.tempStyle}>{temp}°</Text>
                     </View>
                 </View>
-                <View style={ruleStyle}/>
-                <View style={additionalDesStyle}>
-                    <Text style={humidityInfoStyle}>
-                    Humidity {main.humidity}% | {wind.speed} m/s | {this.getWindDirection(wind.deg)}</Text>
-                    <Text style={tempRangeStyle}>{main.temp_min}°/{main.temp_max}°</Text>
-                </View>
-
-               </View>
-                 
-           </Card>
+                    <View style={[styles.cityDescriptionStyle, {backgroundColor: theme[0]}]}>
+                        <View style={styles.cityTempStyle}>
+                            <Image 
+                                style={styles.smallIcon}
+                                source={require('../utils/img/ic_wind.png')}
+                            />
+                            <Text style={styles.detailsText} >{wind.speed} m/s</Text>
+                        </View>
+                        <View style={styles.cityTempStyle}>
+                            <Image 
+                                    style={styles.smallIcon}
+                                    source={require('../utils/img/ic_pressure.png')}
+                            />
+                            <Text style={styles.detailsText} >{parseInt(main.pressure)} hPa</Text>
+                        </View>
+                        <View style={styles.cityTempStyle}>
+                            <Image 
+                                    style={styles.smallIcon}
+                                    source={require('../utils/img/ic_humidity.png')}
+                            />
+                            <Text style={styles.detailsText} >{main.humidity}%</Text>
+                        </View>
+                    </View>
+            </View>
         );
     }
 }
 
 const styles = {
-    cityDetailsStyle: {
+    card: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        flex: 1,
+        borderRadius: 5,
+        elevation: 5,
+        backgroundColor: 'white',
+        height: 180,
+        margin: 25
+    },
+    cityStyle: {
+        flexDirection: 'column',
+        flex: 0.65,
+        padding: 10
     },
     cityDescriptionStyle: {
+        flex: 0.35,
         flexDirection: 'column',
-        justifyContent: 'flex-start'
+        justifyContent: 'space-between',
+        padding: 5
     },
     cityTempStyle: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center'
     },
     cityNameStyle: {
@@ -118,7 +184,6 @@ const styles = {
     },
     countryNameStyle: {
         fontSize: 16,
-        color: '#999999'
     },
     tempStyle: {
         fontSize: 35,
@@ -143,8 +208,18 @@ const styles = {
         justifyContent: 'flex-end'
     },
     iconStyle: {
-        height: 30,
-        width: 30
+        height: 60,
+        width: 60
+    },
+    detailsText: {
+        fontSize: 16,
+        fontWeight: '300',
+        color: 'white',
+        marginLeft: 8
+    },
+    smallIcon: {
+        height: 35,
+        width: 35
     }
 };
 
