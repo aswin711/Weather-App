@@ -1,45 +1,17 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { getWindDirection } from '../utils/commonUtils';
 
 class Details extends Component {
 
-
-    getWindDirection = (deg) => {
-        if (deg < 45/2) {
-            return 'E';
-        }
-        if (deg > 45/2 && deg < ( 45 + 45/2 ) ) {
-            return 'NE';
-        }
-        if (deg > (45 + 45/2) && deg < (90 + 45/2 )){
-            return 'N'
-        }
-        if (deg > (90 + 45/2) && deg < (135 + 45/2)){
-            return 'NW';
-        }
-        if (deg > (135 + 45/2) && deg < (180 + 45/2)){
-            return 'W';
-        }
-        if (deg > (180 + 45/2) && deg < (225 + 45/2)){
-            return 'SW';
-        }
-        if (deg > (225 + 45/2) && deg < (270 + 45/2)){
-            return 'S';
-        }
-        if (deg > (270 + 45/2) && deg < (315 + 45/2)){
-            return 'SE';
-        }
-        if (deg > (315 + 45/2)){
-            return 'E';
-        }
-    }
 
     renderPressure = (pressure) => {
         return (
             <View style={styles.singlePropertyViewStyle}>
                 <Image 
                     style={styles.imageIcon}
-                    source={ require('../utils/img/ic_pressure.png')}
+                    source={ require('../utils/img/ic_pressure_white.png')}
                     resizeMode="cover"
                 />
                 <Text style={styles.propertyValueStyle}>{parseInt(pressure)} hPa</Text>
@@ -48,12 +20,12 @@ class Details extends Component {
     }
 
     renderWind = (wind) => {
-        const text = `${wind.speed}m/s ${this.getWindDirection(parseInt(wind.deg))}`;
+        const text = `${wind.speed}m/s ${getWindDirection(parseInt(wind.deg))}`;
         return (
             <View style={styles.singlePropertyViewStyle}>
                  <Image 
                     style={styles.imageIcon}
-                    source={ require('../utils/img/ic_wind.png')}
+                    source={ require('../utils/img/ic_wind_white.png')}
                     resizeMode="cover"
                 />
                 <Text style={styles.propertyValueStyle}>{text}</Text>
@@ -66,7 +38,7 @@ class Details extends Component {
             <View style={styles.singlePropertyViewStyle}>
                  <Image 
                     style={styles.imageIcon}
-                    source={ require('../utils/img/ic_humidity.png')}
+                    source={ require('../utils/img/ic_humidity_white.png')}
                     resizeMode="cover"
                 />
                 <Text style={styles.propertyValueStyle}>{humidity}%</Text>
@@ -77,16 +49,15 @@ class Details extends Component {
     render() {
         const { wind, pressure, uv, humidity } = this.props;
         return(
-            <View style={styles.container}>
-                <Text style={styles.label}>Details</Text>
+            <LinearGradient colors={this.props.theme} style={styles.container}>
                 <View style={styles.innerContainerStyle}>
-                    <View style={styles.propertyViewStyle}>
-                        {this.renderWind(wind)}
-                        {this.renderPressure(pressure)}
-                        {this.renderHumidity(humidity)}
-                    </View>
-                    </View>
-                </View>
+                   
+                   {this.renderWind(wind)}
+                   {this.renderPressure(pressure)}
+                   {this.renderHumidity(humidity)}
+             
+               </View>
+            </LinearGradient>
         );
     }
 }
@@ -95,28 +66,23 @@ const styles = {
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'white',
-        padding: 5,
-        marginTop: 10,
-        marginBottom: 10
+        padding: 8,
     },
     innerContainerStyle: {
-        flexDirection: 'column',
-        marginTop: 5,
-        marginBottom:5
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 5
     },
     detailsTextStyle: {
         fontSize: 12,
-        color: '#444444',
+        color: 'white',
     },
     propertyViewStyle: {
-        flexDirection: 'row',
         padding: 5,
         flex: 0.5
     },
     singlePropertyViewStyle: {
         flexDirection: 'row',
-        flex: 1,
         alignItems:'center',
         justifyContent: 'center',
     
@@ -124,14 +90,15 @@ const styles = {
     propertyNameStyle: {
         fontSize: 14,
         color: '#444444',
-        fontWeight: '200'
+        fontWeight: '200',
+        
     },
     propertyValueStyle: {
         marginTop: 10,
         marginLeft: 5,
         fontSize: 15,
-        color: '#222222',
-        fontWeight: '200',
+        color: 'white',
+        fontWeight: '100',
         justifyContent: 'center'
     },
     label: {

@@ -20,11 +20,9 @@ import Graph from './Graph';
 import Label from './Label';
 import colors from '../utils/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SCREEN_WIDTH } from '../utils/deviceUtils';
+import { IMG_URL, PNG_EXT, getBanner, getPlotPoints } from '../utils/commonUtils';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const THEME_COLOR = '#70BDC6';
-const IMG_URL = 'https://openweathermap.org/img/w/';
-const IMG_EXT = '.png';
 class City extends Component {
 
     constructor(props){
@@ -46,86 +44,6 @@ class City extends Component {
         this.setState({ refreshing: false });
     }
 
-    get24HourForecast(){
-        const { list } = this.props.data.forecast;
-        _.map(list, single => {
-            const { dt, dt_txt, main, weather} = single;
-        });
-    }
-
-    getCityIndex = (cityId) => {
-        let pos = 0;
-        this.props.home.map((city,index) => {
-            if(city.id === cityId){
-                pos = index;
-            }
-        });
-        return pos;
-    }
-
-    getBanner = (id) => {
-        switch(this.getCityIndex(id)){
-            case 0:
-                return colors.moonPurple;
-            case 1:
-                return colors.shifter;
-            case 2:
-                return colors.quepal;
-            case 3:
-                return colors.orangeFun;
-            default:
-                return colors.moonPurple;
-        }
-    }
-    
-  convert24To12 = (time) => {
-    switch(time){
-      case '00:00':
-          return '12am';
-      case '03:00':
-          return '3am';
-      case '06:00':
-          return '6am';
-      case '09:00':
-          return '9am';
-      case '12:00':
-          return '12pm';
-      case '15:00':
-          return '3pm';
-      case '18:00':
-          return '6pm';
-      case '21:00':
-          return '9pm';
-      default:
-          return '12am';
-    }
-  }
-
-    getPlotPoints = () => {
-        let plot = [];
-        let weather = [];
-        let list = this.props.data.forecast.list.slice(0,8);
-        let low = 0;
-        let high = 0;
-        _.map(list,(value,index) => {
-            let time = value.dt_txt.split(" ");
-            let xlabel = time[1].substr(0,5);
-            y_label = parseInt(value.main.temp);
-            if ( low < y_label ) {
-              low = y_label;
-            }
-            if ( high > y_label ){
-              high = y_label;
-            }
-            plot.push({x: this.convert24To12(xlabel),y: y_label});
-            weather.push(value.weather[0]);
-        });
-
-        const scale = parseInt( (high - low ) / 4 );
-
-        return { plot, domain: { y: [low-10, high-10 ]}, range: { y: [low-10, high-10 ]}, scale, weather };
-    }
-
     renderContainer() {
         const HEADER_COLLAPSED_HEIGHT = 60;
         const HEADER_EXPANDED_HEIGHT = 350;
@@ -136,7 +54,7 @@ class City extends Component {
             extrapolate: 'clamp'
           });
           const headerTitleOpacity = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+            inputRange: [0, 60],
             outputRange: [0, 1],
             extrapolate: 'clamp'
           });
@@ -149,7 +67,9 @@ class City extends Component {
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
         const headerText = `${name} ${parseInt(main.temp)}°`;
-       
+        const imUrl = `${IMG_URL}${weather[0].icon}${PNG_EXT}`;
+        const theme = getBanner(this.props.data.id,this.props.home);
+        const plotPoints = getPlotPoints(this.props.data.forecast.list,8);
         if (list !== 'undefined') {
             return(
     
@@ -160,8 +80,8 @@ class City extends Component {
                     >
                             <View  style={styles.headerView}>
                                 <Image
-                                style={styles.iconImage}
-                                source={{ uri: `${IMG_URL}${weather[0].icon}${IMG_EXT}`}} 
+                                    style={styles.iconImage}
+                                    source={{ uri: imUrl }} 
                                 />
                                 <Text style={styles.headerText}>{headerText}</Text>
                             </View>
@@ -186,12 +106,12 @@ class City extends Component {
                     >
                      <Label 
                             height={HEADER_EXPANDED_HEIGHT}
-                            theme={this.getBanner(this.props.data.id)}
+                            theme={theme}
                             city={ name }
                             temp={ parseInt(main.temp) }
                             status={ weather[0] }
                             navigation={ this.props.navigation }
-                            plotPoints={this.getPlotPoints()}
+                            plotPoints={plotPoints}
                         />
                         <Forecast 
                             data={ list }
@@ -200,6 +120,7 @@ class City extends Component {
                             navigation={ this.props.navigation }
                         />
                         <Details 
+                            theme={theme}
                             wind={ wind }
                             pressure={ main.pressure }
                             uv={ visibility }
@@ -214,7 +135,6 @@ class City extends Component {
 }
 
     render() {  
-        const HEADER_HEIGHT = 300;
          return(
              <View>
                   {this.renderContainer()}
@@ -231,7 +151,7 @@ const styles = {
     },
     headerStyle: {
         flexDirection: 'row',
-        backgroundColor: '#f5f7fa',
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5

@@ -5,11 +5,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 
 import { code } from '../utils/country_code';
+import { getCountry } from '../utils/commonUtils';
 
 class ListCity extends Component {
 
 
-    getCountry = (country_code) => {
+   /* getCountry = (country_code) => {
         let countryName = "";
         code.map(country => {
             if (country.code === country_code){
@@ -18,7 +19,7 @@ class ListCity extends Component {
         });
 
         return countryName;
-    }
+    }*/
 
     render() {
         const { cityDetailsStyle,
@@ -33,9 +34,9 @@ class ListCity extends Component {
             tempRangeStyle   } = styles;
 
         const { main, name, sys} = this.props.data;
-
+        const country = getCountry(sys.country);
         return(
-           <Card>
+           <Card style={{ elevation: 5 }}>
                <View style={{ flex: 1, flexDirection: 'row', height: 50}}>
                <View style={styles.deleteStyle}>
                    <TouchableOpacity
@@ -50,7 +51,7 @@ class ListCity extends Component {
                </View>
                <View style={cityDetailsStyle}>
                         <Text style={cityNameStyle}>{name}</Text>
-                        <Text style={countryNameStyle}>{this.getCountry(sys.country)}</Text>
+                        <Text style={countryNameStyle}>{country}</Text>
                 </View>
                </View>
                  

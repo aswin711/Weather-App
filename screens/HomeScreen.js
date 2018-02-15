@@ -16,7 +16,8 @@ import Forecast from '../components/Forecast';
 import BottomTab from '../components/BottomTab';
 import Slides from '../components/Slides';
 import CustomScroll from '../components/CustomScroll';
-const THEME_COLOR = '#70BDC6';
+import { defaultTheme } from '../utils/theme';
+
 class HomeScreen extends Component {
     constructor(props){
         super(props);
@@ -31,61 +32,14 @@ class HomeScreen extends Component {
    
     componentDidMount(){
         if (this.props.cities.length === 0){
-            this.props.navigation.navigate('location',{theme: THEME_COLOR});
+            this.props.navigation.navigate('location',{theme: defaultTheme[0]});
         } else {
             this.props.addPendingData([]);
         }
     }
 
-     fetchData(){
-         _.map(this.props.cities,city => {
-           this.props.fetchData(city.id);
-         }); 
-    }
-
-    openCitiesScreen = () => {
-        this.props.navigation.navigate('cities');
-    }
-
-    openForeCastScreen = () => {
-        this.props.navigation.navigate('forecast',{forecast: this.props.data.forecast });
-    }
-   
-    renderCity = (item) => {
-        if (item.item.id > 0 ){
-            return(
-                <City 
-                    data={item.item}
-                    forecast={() => this.openForeCastScreen()}
-                    navigation={this.props.navigation}
-                />
-            );
-        }
-    }
-    renderEmptyComponent = () => {
-        return(
-            <View style={styles.container }>
-                <Text style={styles.emptyText}>No cities added yet!!!</Text>
-            </View>
-        );
-    }
-    renderSlides(){
-                return (
-                    <FlatList
-                        pagingEnabled
-                        data={this.props.data}
-                        horizontal
-                        alwaysBounceVertical={false}
-                        showsHorizontalScrollIndicator={false}
-                        ListEmptyComponent={this.renderEmptyComponent()}
-                        keyExtractor={item => item.id}
-                        renderItem={item => this.renderCity(item)}
-                       
-                    />
-                );
-    }
+    
     render() {
-        console.log(this.props.data);
             return(
                 <View style={styles.container}>
                    <CityList 
@@ -93,6 +47,7 @@ class HomeScreen extends Component {
                    />
                 </View>
             );
+           
         }
 }
 

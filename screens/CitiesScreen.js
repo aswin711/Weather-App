@@ -4,8 +4,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import FAB from 'react-native-fab';
 import { Button } from 'react-native-elements';
+import _ from 'lodash';
 import * as actions from '../actions';
-import ListCity from '../components/ListCity';
+import EditCity from '../components/EditCity';
 
 import colors from '../utils/colors';
 
@@ -28,49 +29,37 @@ class CitiesScreen extends Component {
         headerTintColor: 'white',
         headerTitleStyle: {
             fontWeight: '100',
-        },
-        headerRight:(
-            <TouchableOpacity
-             onPress={() => navigation.navigate('edit')}
-             style={{ marginRight: 10}}
-            >
-                    <Icon
-                      name='md-create'
-                      size={30}
-                      color='white'
-                    />
-            </TouchableOpacity>       
-        )
+        }
     });
 
-    getCityIndex = (cityId) => {
-        let pos = 0;
-        this.props.data.map((city,index) => {
-            if(city.id === cityId){
-                pos = index;
+
+    onDelete = (city) => {
+        let deletedCity = "";
+        this.props.cities.map((cityData,index) => {
+            if(cityData.id === city.id){
+                deletedCity = cityData.id;
+                this.props.cities.splice(index,1);
             }
         });
-        return pos;
+        this.props.addCities(this.props.cities);
+
+        let data = _.without(this.props.data,city);
+        this.props.addPendingData(data);
     }
 
-    getBanner = (id) => {
-        switch(this.getCityIndex(id)){
-            case 0:
-                return colors.moonPurple;
-            case 1:
-                return colors.shifter;
-            case 2:
-                return colors.quepal;
-            case 3:
-                return colors.orangeFun;
-            default:
-                return colors.moonPurple;
-        }
+    renderCity = (item) => {
+        if( item.id > 0) {
+            return (
+                <EditCity
+                    data={item.weather}
+                    delete={() => this.onDelete(item)}
+                />
+            );
+        } else {
+            return <View/>;
+        }  
     }
-
-    navigateToEdit = () => {
-        this.props.navigation.navigate('edit');
-    }
+  
 
     openLocationScreen = (theme) => {
         if (this.props.cities.length <= 3){
@@ -81,22 +70,8 @@ class CitiesScreen extends Component {
         
     }
 
-    renderCity = (item) => {
-        const theme = this.getBanner(item.id);
-        if( item.id > 0) {
-            return (
-                <ListCity
-                    data={item.weather}
-                    theme={theme}
-                />
-            );
-        } else {
-            return <View/>;
-        }  
-    }
     render(){
         const {theme} = this.props.navigation.state.params;
-        console.log(this.props.data);
         return(
             <View style={styles.container}>
                 <FlatList
@@ -105,14 +80,13 @@ class CitiesScreen extends Component {
                     renderItem={item => this.renderCity(item.item)}
                 />
 
-            <FAB 
-            style={styles.fabButton}
-            buttonColor={theme[0]}
-            iconTextColor="#FFFFFF" 
-            onClickAction={() => this.openLocationScreen(theme[1])} 
-            visible={true} 
-           />
-
+                <FAB 
+                    style={styles.fabButton}
+                    buttonColor={theme[0]}
+                    iconTextColor="#FFFFFF" 
+                    onClickAction={() => this.openLocationScreen(theme[1])} 
+                    visible={true} 
+                />
             </View>
             
         );
@@ -123,7 +97,7 @@ const styles = {
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'white'
+        backgroundColor: '#f2f2f2'
     },
     fabButton: {
         height: 60,

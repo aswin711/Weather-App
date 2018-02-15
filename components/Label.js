@@ -56,7 +56,7 @@ class Label extends Component {
 const styles = {
     container: {
         height: 400,
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
     topContainer:{
         flex: 0.6,

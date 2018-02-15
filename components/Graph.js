@@ -11,17 +11,18 @@ import {
     VictoryGroup,
     VictoryScatter, 
     VictoryZoomContainer} from 'victory-native';
-const IMG_URL = 'https://openweathermap.org/img/w/';
-const IMG_EXT = '.png';
+import { IMG_URL, PNG_EXT } from '../utils/commonUtils';
+
 class Graph extends Component {
 
 
   renderWeatherBlock = (block) => {
+    const imgUrl = `${IMG_URL}${block.icon}${PNG_EXT}`;
     return (
       <View style={styles.blockStyle}>
        <Image
           style={styles.iconImage}
-          source={{ uri: `${IMG_URL}${block.icon}${IMG_EXT}`}}
+          source={{ uri: imgUrl}}
         />
         <Text style={styles.blockText}>{block.x}</Text>
       </View>
@@ -111,7 +112,7 @@ const styles = {
     container: {
       flex: 1,
       flexDirection:'column',
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: 'rgba(0,0,0,0)'
     },
     topContainer: {
       flex: 0.5,
@@ -149,73 +150,3 @@ const styles = {
 }
 
 export default Graph;
-
-
-/*
-
-class CustomPie extends React.Component {
-  render() {
-    const {datum, x, y} = this.props;
-    const pieWidth = 120;
-
-    return (
-      <g transform={
-        `translate(${x - pieWidth / 2}, ${y - pieWidth / 2})`
-        }
-      >
-        <VictoryPie
-          standalone={false}
-          height={pieWidth}
-          width={pieWidth}
-          data={datum.pie}
-          style={{labels: {fontSize: 0}}}
-          colorScale={["#f77", "#55e", "#8af"]}
-        />
-      </g>
-    );
-  }
-}
-
-class CustomDataComponent extends React.Component {
-  render() {
-    const data = [
-      {x: "Jan", y: 30},
-      {x: "Feb", y: 32},
-      {x: "Mar", y: 65},
-      {x: "Apr", y: 38},
-      {x: "May", y: 50},
-      {x: "Jun", y: 47},
-      {x: "Jul", y: 38},
-      {x: "Aug", y: 48},
-      {x: "Sep", y: 80},
-      {x: "Oct", y: 73},
-      {x: "Nov", y: 76},
-      {x: "Dec", y: 100}
-    ];
-
-    const pieData = data.map((datum) => {
-      datum.pie = [
-        {x: "Lions", y: Math.round(Math.random() * 10)},
-        {x: "Tigers", y: Math.round(Math.random() * 10)},
-        {x: "Bears", y: Math.round(Math.random() * 10)}
-      ];
-      return datum;
-    });
-
-    return (
-      <VictoryChart domain={{y: [0, 100]}}>
-        <VictoryAxis/>
-        <VictoryGroup data={pieData}>
-          <VictoryLine/>
-          <VictoryScatter
-            dataComponent={<CustomPie />}
-          />
-        </VictoryGroup>
-      </VictoryChart>
-    );
-  }
-}
-
-ReactDOM.render(<CustomDataComponent/>, mountNode)
-
-*/

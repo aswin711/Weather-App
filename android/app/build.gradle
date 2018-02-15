@@ -138,12 +138,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.facebook.react:react-native:+'
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-linear-gradient')
-    compile project(':react-native-svg')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.facebook.react:react-native:+'
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-svg')
     // From node_modules
 }
 
