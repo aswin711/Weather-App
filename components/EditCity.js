@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
@@ -7,19 +7,8 @@ import _ from 'lodash';
 import { code } from '../utils/country_code';
 import { getCountry } from '../utils/commonUtils';
 
-class ListCity extends Component {
+class EditCity extends Component {
 
-
-   /* getCountry = (country_code) => {
-        let countryName = "";
-        code.map(country => {
-            if (country.code === country_code){
-                countryName = country.name;
-            }
-        });
-
-        return countryName;
-    }*/
 
     render() {
         const { cityDetailsStyle,
@@ -37,21 +26,21 @@ class ListCity extends Component {
         const country = getCountry(sys.country);
         return(
            <Card style={{ elevation: 5 }}>
-               <View style={{ flex: 1, flexDirection: 'row', height: 50}}>
-               <View style={styles.deleteStyle}>
-                   <TouchableOpacity
-                    onPress={this.props.delete}
-                   >
-                       <Icon
-                            name="md-remove-circle"
-                            color="#c43a31"
-                            size={30}
-                            />
-                   </TouchableOpacity>
-               </View>
-               <View style={cityDetailsStyle}>
-                        <Text style={cityNameStyle}>{name}</Text>
-                        <Text style={countryNameStyle}>{country}</Text>
+               <View style={{ flex: 1, flexDirection: 'row', height: 60}}>
+                <View style={styles.deleteStyle}>
+                    <TouchableOpacity
+                        onPress={this.props.delete}
+                    >
+                        <Icon
+                                name="md-remove-circle"
+                                color="#c43a31"
+                                size={30}
+                                />
+                    </TouchableOpacity>
+                </View>
+                <View style={cityDetailsStyle}>
+                            <Text style={cityNameStyle}>{name}</Text>
+                            <Text style={countryNameStyle}>{country}</Text>
                 </View>
                </View>
                  
@@ -60,7 +49,7 @@ class ListCity extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     cityDetailsStyle: {
         flex: 0.8,
         flexDirection: 'column',
@@ -91,6 +80,6 @@ const styles = {
         alignItems: 'flex-start',
         marginLeft: 15
     }
-};
+});
 
-export default ListCity;
+export default EditCity;

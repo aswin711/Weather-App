@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Image } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
@@ -20,7 +20,7 @@ class CityList extends Component {
             this.setState({
                 loading: false
             })
-        }, 1000);
+        }, 1500);
     }
     componentDidMount(){
         this.props.cities.map(city => {
@@ -105,7 +105,7 @@ class CityList extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: SCREEN_WIDTH,
@@ -133,7 +133,7 @@ const styles = {
     button: {
         marginTop: 15
     }
-}
+});
 
 function mapStateToProps(state){
     return {data: state.home, cities: state.city };

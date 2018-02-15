@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, Image } from 'react-native';
+import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
 import { Card } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from 'lodash';
@@ -70,7 +70,7 @@ class WeatherCard extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
         flex: 1,
@@ -149,6 +149,6 @@ const styles = {
         marginTop: 5,
         marginLeft: 10
     }
-};
+});
 
 export default WeatherCard;

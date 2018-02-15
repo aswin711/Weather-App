@@ -5,7 +5,8 @@ import {
     ScrollView, 
     RefreshControl, 
     FlatList,
-    ActivityIndicator } from 'react-native';
+    ActivityIndicator,
+    StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -14,8 +15,6 @@ import City from '../components/City';
 import CityList from '../components/CityList';
 import Forecast from '../components/Forecast';
 import BottomTab from '../components/BottomTab';
-import Slides from '../components/Slides';
-import CustomScroll from '../components/CustomScroll';
 import { defaultTheme } from '../utils/theme';
 
 class HomeScreen extends Component {
@@ -51,7 +50,7 @@ class HomeScreen extends Component {
         }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -62,7 +61,8 @@ const styles = {
         color: '#999999',
         fontWeight: "300"
     }
-}
+});
+
 function mapStateToProps(state){
     return { data: state.home, cities: state.city };
 }

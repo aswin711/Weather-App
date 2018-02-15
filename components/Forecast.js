@@ -4,7 +4,8 @@ import {
     Text, 
     TouchableOpacity,
     Image, 
-    FlatList} from 'react-native';
+    FlatList,
+    StyleSheet} from 'react-native';
 import _ from 'lodash';
 import { getForecastReport, getTempRange, IMG_URL, PNG_EXT, getWeekDay} from '../utils/commonUtils';
 
@@ -12,7 +13,8 @@ class Forecast extends Component {
 
 
     openForeCastScreen = (list) => {
-        this.props.navigation.navigate('forecast',{forecast: list});
+        const {theme} = this.props;
+        this.props.navigation.navigate('forecast',{forecast: list, theme});
     }
 
     renderBlock = (item) => {
@@ -77,7 +79,7 @@ class Forecast extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         backgroundColor: 'white',
@@ -137,6 +139,6 @@ const styles = {
         marginLeft: 10,
         marginRight: 10
     }
-}
+});
 
 export default Forecast;

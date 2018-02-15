@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, Image } from 'react-native';
+import {View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import _ from 'lodash';
 import { 
     VictoryBar,
@@ -42,6 +42,7 @@ class Graph extends Component {
     render() {
         const { weather,plot, domain, range, scale,style } = this.props.data;
         const block = this.getBlockData(weather,plot);
+        //console.log(plot);
         return (
             <View 
                 pointerEvents="none"
@@ -108,7 +109,7 @@ class Graph extends Component {
 
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
       flex: 1,
       flexDirection:'column',
@@ -135,8 +136,7 @@ const styles = {
     },
     blockStyle: {
       flexDirection: 'column',
-      marginLeft: '4%',
-      marginRight: '4%',
+      marginLeft: '5.9%',
       alignItems: 'center'
     },
     blockText: {
@@ -147,6 +147,6 @@ const styles = {
       height: 30,
       width: 30,
     }
-}
+});
 
 export default Graph;

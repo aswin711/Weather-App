@@ -6,9 +6,9 @@ import {
     FlatList, 
     Image,
     ScrollView,
-    Animated } from 'react-native';
+    Animated, 
+    StyleSheet} from 'react-native';
 import _ from 'lodash';
-import WelcomeScreen from './WelcomeScreen';
 import WeatherCard from '../components/WeatherCard';
 
 class ForecastScreen extends Component {
@@ -37,6 +37,21 @@ class ForecastScreen extends Component {
                 <Text style={styles.rangeText}>{range}</Text>
             </View>
        );
+    }
+
+    renderHeader = (list) => {
+        const listLen = list.length;
+        const startDate = list[0].date;
+        const endDate = list[listLen - 1].date;
+        const startDate_split = startDate.split("-");
+        const endDate_split = endDate.split("-");
+        const range = `${startDate_split[2]}/${startDate_split[1]} - ${endDate_split[2]}/${endDate_split[1]}`;
+        return(
+             <View style={styles.headerStyle}>
+                 <Text style={styles.headerText}>{listLen} Days Forecast</Text>
+                 <Text style={styles.headerRangeText}>{range}</Text>
+             </View>
+        );
     }
 
     renderWeatherBlock = (item) => {
@@ -81,12 +96,12 @@ class ForecastScreen extends Component {
           });
 
         const { params } = this.props.navigation.state;
-        const { forecast } = params;
+        const { forecast, theme } = params;
        console.log(forecast);
         return(
             <View style={{ flex: 1}}>
-                <Animated.View style={{ height: headerHeight, opacity: headerTitleOpacity, elevation: headerElevation }}>
-                    {this.renderDateRange(forecast)}
+                <Animated.View style={{ height: headerHeight, opacity: headerTitleOpacity, elevation: headerElevation, backgroundColor: theme[0] }}>
+                    {this.renderHeader(forecast)}
                 </Animated.View>
                 <ScrollView 
                     style={styles.container}
@@ -120,7 +135,7 @@ class ForecastScreen extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -130,20 +145,34 @@ const styles = {
     titleStyle: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: 60,
+        height: 100,
     },
     titleText: {
-        fontSize: 16,
+        fontSize: 20,
         color: '#444444'
     },
     rangeText: {
-        fontSize: 14,
+        fontSize: 16,
         color: '#999999'
+    },
+    headerStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 60,
+    },
+    headerText: {
+        fontSize: 16,
+        color: 'white',
+        fontWeight: '300'
+    },
+    headerRangeText: {
+        fontSize: 14,
+        color: 'white'
     },
     closeIcon: {
         height: 35,
         width: 35
     }
-}
+});
 
 export default ForecastScreen;

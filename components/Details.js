@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { getWindDirection } from '../utils/commonUtils';
 
@@ -62,7 +62,7 @@ class Details extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -110,5 +110,5 @@ const styles = {
         width: 35,
         height: 35
     }
-}
+});
 export default Details;

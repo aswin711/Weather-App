@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation';
 import { cities } from '../utils/popular_cities';
@@ -144,7 +144,7 @@ class LocationScreen extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f2f2f2'
@@ -179,7 +179,7 @@ const styles = {
         color: '#444',
         fontWeight: '100'
     }
-}
+});
 
 function mapStateToProps({ location, city }){
     return { location, city };

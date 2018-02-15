@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ToastAndroid, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, ToastAndroid, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import FAB from 'react-native-fab';
@@ -84,7 +84,7 @@ class CitiesScreen extends Component {
                     style={styles.fabButton}
                     buttonColor={theme[0]}
                     iconTextColor="#FFFFFF" 
-                    onClickAction={() => this.openLocationScreen(theme[1])} 
+                    onClickAction={() => this.openLocationScreen(theme[0])} 
                     visible={true} 
                 />
             </View>
@@ -93,7 +93,7 @@ class CitiesScreen extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -117,7 +117,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center'
     }
-}
+});
 
 function mapStateToProps(state){
     return { data: state.home, cities: state.city };

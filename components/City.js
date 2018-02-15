@@ -8,7 +8,8 @@ import {
     ToolbarAndroid, 
     Animated,
     Image, 
-    TouchableOpacity} from 'react-native';
+    TouchableOpacity,
+    StyleSheet} from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
@@ -115,6 +116,7 @@ class City extends Component {
                         />
                         <Forecast 
                             data={ list }
+                            theme={theme}
                             currentTemp={ main.temp }
                             forecast={ this.props.forecast }
                             navigation={ this.props.navigation }
@@ -144,7 +146,7 @@ class City extends Component {
     } 
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
        flex: 1,
         width: SCREEN_WIDTH,
@@ -179,7 +181,7 @@ const styles = {
         justifyContent: 'center',
         marginRight: 10
     }
-}
+});
 
 function mapStateToProps(state){
     return {home: state.home};

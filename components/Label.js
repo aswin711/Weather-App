@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../utils/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -53,7 +53,7 @@ class Label extends Component {
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         height: 400,
         flexDirection: 'column'
@@ -110,6 +110,6 @@ const styles = {
        justifyContent: 'flex-end'
     }
     
-}
+});
 
 export default Label;
