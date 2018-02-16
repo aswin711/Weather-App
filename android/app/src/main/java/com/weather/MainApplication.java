@@ -2,6 +2,7 @@ package com.weather;
 
 import android.app.Application;
 
+import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -9,7 +10,11 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+<<<<<<< HEAD
 import com.horcrux.svg.SvgPackage;
+=======
+import com.horcrux.svg.RNSvgPackage;
+>>>>>>> 43a53946e0371819eba11213a2b64fa48e72e697
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,9 +31,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+<<<<<<< HEAD
             new SvgPackage(),
             new LinearGradientPackage(),
             new VectorIconsPackage()
+=======
+          new RNSvgPackage()
+>>>>>>> 43a53946e0371819eba11213a2b64fa48e72e697
       );
     }
 
