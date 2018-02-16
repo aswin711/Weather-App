@@ -1,4 +1,4 @@
-{
+  {
   "name": "Weather",
   "version": "0.0.1",
   "private": true,
@@ -31,10 +31,10 @@
     "jest": "22.1.4",
     "react-test-renderer": "16.2.0"
   },
-    "rnpm": {
-      "assets": [
-    "./assets/fonts/"
-      ]
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   },
   "jest": {
     "preset": "react-native"
