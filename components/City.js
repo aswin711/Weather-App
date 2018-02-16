@@ -22,7 +22,7 @@ import Label from './Label';
 import colors from '../utils/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SCREEN_WIDTH } from '../utils/deviceUtils';
-import { IMG_URL, PNG_EXT, getBanner, getPlotPoints } from '../utils/commonUtils';
+import { IMG_URL, PNG_EXT, getBanner, getPlotPoints, getCityIndex } from '../utils/commonUtils';
 
 class City extends Component {
 
@@ -65,6 +65,9 @@ class City extends Component {
             extrapolate: 'clamp'
           });
 
+        const id = getCityIndex(this.props.data.id, this.props.cities);
+        const { size } = this.props;
+        const indicator = {"selected": id, "size" : size};
         const { name, main, weather, wind, visibility } = this.props.data.weather;
         const { list } = this.props.data.forecast;
         const headerText = `${name} ${parseInt(main.temp)}°`;
@@ -113,6 +116,7 @@ class City extends Component {
                             status={ weather[0] }
                             navigation={ this.props.navigation }
                             plotPoints={plotPoints}
+                            indicator={indicator}
                         />
                         <Forecast 
                             data={ list }
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state){
-    return {home: state.home};
+    return {home: state.home, cities: state.city};
 }
 
 export default connect(mapStateToProps,actions)(City);

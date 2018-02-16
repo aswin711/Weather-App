@@ -70,7 +70,17 @@ const convert24To12 = (time) => {
 }
 
 
-getCityIndex = (cityId,list) => {
+export const getCityIndex = (cityId,list) => {
+    let pos = 0;
+    list.map((city,index) => {
+        if(city.id === cityId){
+            pos = index;
+        }
+    });
+    return pos;
+}
+
+getCityId = (cityId,list) => {
     let pos = 0;
     list.map((city,index) => {
         if(city.id === cityId){
@@ -81,7 +91,7 @@ getCityIndex = (cityId,list) => {
 }
 
 export const getBanner = (id,list) => {
-    const cityId = this.getCityIndex(id,list);
+    const cityId = this.getCityId(id,list);
     return getBannerColor(cityId);
 }
 
@@ -241,4 +251,17 @@ export const  getCountry = (country_code) => {
     });
 
     return countryName;
+}
+
+export const sortList = (dataList,cityList) => {
+    let sortedList = [];
+    _.map(cityList, city => {
+        _.map(dataList, data => {
+            if (data.id === city.id ){
+                sortedList.push(data);
+            }
+        });
+    });
+
+    return sortedList;
 }

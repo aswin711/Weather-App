@@ -7,6 +7,7 @@ import City from './City';
 import { Button } from 'react-native-elements';
 import { defaultTheme } from '../utils/theme';
 import { SCREEN_WIDTH } from '../utils/deviceUtils';
+import { sortList } from '../utils/commonUtils';
 
 class CityList extends Component {
 
@@ -33,10 +34,12 @@ class CityList extends Component {
     }
 
     renderCity = (item) => {
+        const size = this.props.cities.length;
         if (item.id > 0 ){
             return(
                 <City 
                     data={item}
+                    size={size}
                     navigation={this.props.navigation}
                 />
             );
@@ -86,12 +89,14 @@ class CityList extends Component {
         );
     }
     render() {
-        
+        const { data, cities } = this.props;
+        const sortedList = sortList(data,cities);
+        //console.log(sortedList,cities);
         if (this.props.data) {
             return(
                 <FlatList
                 pagingEnabled
-                data={this.props.data}
+                data={sortedList}
                 horizontal
                 alwaysBounceVertical={false}
                 showsHorizontalScrollIndicator={false}

@@ -5,6 +5,7 @@ import colors from '../utils/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Graph from './Graph';
+import TabIndicator from './TabIndicator';
 
 const IMG_URL = 'https://openweathermap.org/img/w/';
 const IMG_EXT = '.png';
@@ -13,7 +14,7 @@ class Label extends Component {
         this.props.navigation.navigate('cities',{theme});
     }
     render() {
-        const {theme, city, temp, status } = this.props;
+        const {theme, city, temp, status,indicator } = this.props;
         //30°
         return(
             <LinearGradient colors={theme}>
@@ -46,6 +47,12 @@ class Label extends Component {
                         data={this.props.plotPoints}
                     />
                 </View>
+                <View style={styles.indicatorStyle}>
+                    <TabIndicator
+                        indicator={indicator}
+                        theme={theme}
+                    />
+                </View>
                 
                 </View>   
             </LinearGradient> 
@@ -65,9 +72,14 @@ const styles = StyleSheet.create({
  
     },
     bottomContainer:{
-        flex: 0.4,
+        flex: 0.3,
         flexDirection: 'column',
-        bottom: 0
+    },
+    indicatorStyle:{
+        flex: 0.1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     imageStyle: {
         position: 'absolute',

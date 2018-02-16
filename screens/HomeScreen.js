@@ -14,7 +14,6 @@ import * as actions from '../actions';
 import City from '../components/City';
 import CityList from '../components/CityList';
 import Forecast from '../components/Forecast';
-import BottomTab from '../components/BottomTab';
 import { defaultTheme } from '../utils/theme';
 
 class HomeScreen extends Component {
