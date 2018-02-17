@@ -16,8 +16,4 @@
  - Victory Native ( For graphs )
 
  ### Screens
- ![1.png](https://raw.github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/1.png)
- ![2.png](https://github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/2.png)
- ![3.png](https://github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/3.png)
- ![4.png](https://github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/4.png)
-  ![5.png](https://github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/5.png)
+ ![1.png](https://github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/1.png)
