@@ -14,3 +14,6 @@
  - Redux Persist
  - React Native Svg
  - Victory Native ( For graphs )
+
+ ### Screens
+ ![alt text](https://github.com/aswin711/Weather-App/tree/master/utils/img/screen_shots/1.png)
